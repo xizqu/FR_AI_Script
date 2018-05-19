@@ -1,0 +1,3 @@
+Motor Drive:
+JumpIfByteEquals ABILITY_MOTORDRIVE @DiscourageElectric #Insert in @AbilityAbsorbCheck
+
