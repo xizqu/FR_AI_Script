@@ -1,0 +1,17 @@
+#org 0x1DBB16
+countviablepokemononteam 0x1
+jumpifbyteequals 0x0 0x81DBB3A
+getpowerofstrongestmove
+jumpifbytenotequal 0x0 0x81DBB3A
+jumpifmovescriptinmoveset 0x1 0x7F 0x81DBB32
+randomjumpiflessthan 0x50 0x81DBB01
+
+#org 0x1DBB32
+randomjumpiflessthan 0x14 0x81DBB01
+addtoviabilityscore 0x3
+
+#org 0x1DBB3A
+returntobattle
+
+#org 0x1DBB01
+returntobattle

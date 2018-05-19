@@ -1,0 +1,13 @@
+#org 0x1DBCD6
+jumprandomunknown 0x81DBCDC
+safarizone
+
+#org 0x1DBCDC
+runaway
+jumpifhealthequals 0x0 0x14 0x81DBCEC
+jumpifhealthlessthan 0x0 0x14 0x81DBCEC
+returntobattle
+
+#org 0x1DBCEC
+runaway
+returntobattle

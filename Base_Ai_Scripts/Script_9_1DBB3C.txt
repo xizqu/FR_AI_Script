@@ -1,0 +1,310 @@
+#org 0x1DBB3C
+jumpifhealthmorethan 0x1 0x46 0x81DBB59
+jumpifhealthmorethan 0x1 0x1E 0x81DBB68
+getmovescriptid
+jumpifbyteinlist 0x81DBBFC 0x81DBB77
+jump 0x81DBB7F
+
+#org 0x1DBB59
+getmovescriptid
+jumpifbyteinlist 0x81DBBC3 0x81DBB77
+jump 0x81DBB7F
+
+#org 0x1DBB77
+randomjumpiflessthan 0x32 0x81DBB7F
+addtoviabilityscore 0xFE
+
+#org 0x1DBB7F
+jumpifhealthmorethan 0x0 0x46 0x81DBB9C
+jumpifhealthmorethan 0x0 0x1E 0x81DBBAB
+getmovescriptid
+jumpifbyteinlist 0x81DBC55 0x81DBBBA
+jump 0x81DBBC2
+
+#org 0x1DBB9C
+getmovescriptid
+jumpifbyteinlist 0x81DBC2C 0x81DBBBA
+jump 0x81DBBC2
+
+#org 0x1DBBBA
+randomjumpiflessthan 0x32 0x81DBBC2
+addtoviabilityscore 0xFE
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBAB
+getmovescriptid
+jumpifbyteinlist 0x81DBC2D 0x81DBBBA
+jump 0x81DBBC2
+
+#org 0x1DBBBA
+randomjumpiflessthan 0x32 0x81DBBC2
+addtoviabilityscore 0xFE
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBBA
+randomjumpiflessthan 0x32 0x81DBBC2
+addtoviabilityscore 0xFE
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBB7F
+jumpifhealthmorethan 0x0 0x46 0x81DBB9C
+jumpifhealthmorethan 0x0 0x1E 0x81DBBAB
+getmovescriptid
+jumpifbyteinlist 0x81DBC55 0x81DBBBA
+jump 0x81DBBC2
+
+#org 0x1DBB9C
+getmovescriptid
+jumpifbyteinlist 0x81DBC2C 0x81DBBBA
+jump 0x81DBBC2
+
+#org 0x1DBBBA
+randomjumpiflessthan 0x32 0x81DBBC2
+addtoviabilityscore 0xFE
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBAB
+getmovescriptid
+jumpifbyteinlist 0x81DBC2D 0x81DBBBA
+jump 0x81DBBC2
+
+#org 0x1DBBBA
+randomjumpiflessthan 0x32 0x81DBBC2
+addtoviabilityscore 0xFE
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBBA
+randomjumpiflessthan 0x32 0x81DBBC2
+addtoviabilityscore 0xFE
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBB68
+getmovescriptid
+jumpifbyteinlist 0x81DBBD1 0x81DBB77
+jump 0x81DBB7F
+
+#org 0x1DBB77
+randomjumpiflessthan 0x32 0x81DBB7F
+addtoviabilityscore 0xFE
+
+#org 0x1DBB7F
+jumpifhealthmorethan 0x0 0x46 0x81DBB9C
+jumpifhealthmorethan 0x0 0x1E 0x81DBBAB
+getmovescriptid
+jumpifbyteinlist 0x81DBC55 0x81DBBBA
+jump 0x81DBBC2
+
+#org 0x1DBB9C
+getmovescriptid
+jumpifbyteinlist 0x81DBC2C 0x81DBBBA
+jump 0x81DBBC2
+
+#org 0x1DBBBA
+randomjumpiflessthan 0x32 0x81DBBC2
+addtoviabilityscore 0xFE
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBAB
+getmovescriptid
+jumpifbyteinlist 0x81DBC2D 0x81DBBBA
+jump 0x81DBBC2
+
+#org 0x1DBBBA
+randomjumpiflessthan 0x32 0x81DBBC2
+addtoviabilityscore 0xFE
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBBA
+randomjumpiflessthan 0x32 0x81DBBC2
+addtoviabilityscore 0xFE
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBB7F
+jumpifhealthmorethan 0x0 0x46 0x81DBB9C
+jumpifhealthmorethan 0x0 0x1E 0x81DBBAB
+getmovescriptid
+jumpifbyteinlist 0x81DBC55 0x81DBBBA
+jump 0x81DBBC2
+
+#org 0x1DBB9C
+getmovescriptid
+jumpifbyteinlist 0x81DBC2C 0x81DBBBA
+jump 0x81DBBC2
+
+#org 0x1DBBBA
+randomjumpiflessthan 0x32 0x81DBBC2
+addtoviabilityscore 0xFE
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBAB
+getmovescriptid
+jumpifbyteinlist 0x81DBC2D 0x81DBBBA
+jump 0x81DBBC2
+
+#org 0x1DBBBA
+randomjumpiflessthan 0x32 0x81DBBC2
+addtoviabilityscore 0xFE
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBBA
+randomjumpiflessthan 0x32 0x81DBBC2
+addtoviabilityscore 0xFE
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBB77
+randomjumpiflessthan 0x32 0x81DBB7F
+addtoviabilityscore 0xFE
+
+#org 0x1DBB7F
+jumpifhealthmorethan 0x0 0x46 0x81DBB9C
+jumpifhealthmorethan 0x0 0x1E 0x81DBBAB
+getmovescriptid
+jumpifbyteinlist 0x81DBC55 0x81DBBBA
+jump 0x81DBBC2
+
+#org 0x1DBB9C
+getmovescriptid
+jumpifbyteinlist 0x81DBC2C 0x81DBBBA
+jump 0x81DBBC2
+
+#org 0x1DBBBA
+randomjumpiflessthan 0x32 0x81DBBC2
+addtoviabilityscore 0xFE
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBAB
+getmovescriptid
+jumpifbyteinlist 0x81DBC2D 0x81DBBBA
+jump 0x81DBBC2
+
+#org 0x1DBBBA
+randomjumpiflessthan 0x32 0x81DBBC2
+addtoviabilityscore 0xFE
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBBA
+randomjumpiflessthan 0x32 0x81DBBC2
+addtoviabilityscore 0xFE
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBB7F
+jumpifhealthmorethan 0x0 0x46 0x81DBB9C
+jumpifhealthmorethan 0x0 0x1E 0x81DBBAB
+getmovescriptid
+jumpifbyteinlist 0x81DBC55 0x81DBBBA
+jump 0x81DBBC2
+
+#org 0x1DBB9C
+getmovescriptid
+jumpifbyteinlist 0x81DBC2C 0x81DBBBA
+jump 0x81DBBC2
+
+#org 0x1DBBBA
+randomjumpiflessthan 0x32 0x81DBBC2
+addtoviabilityscore 0xFE
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBAB
+getmovescriptid
+jumpifbyteinlist 0x81DBC2D 0x81DBBBA
+jump 0x81DBBC2
+
+#org 0x1DBBBA
+randomjumpiflessthan 0x32 0x81DBBC2
+addtoviabilityscore 0xFE
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBBA
+randomjumpiflessthan 0x32 0x81DBBC2
+addtoviabilityscore 0xFE
+
+#org 0x1DBBC2
+returntobattle
+
+#org 0x1DBBC2
+returntobattle

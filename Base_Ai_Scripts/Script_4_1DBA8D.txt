@@ -1,0 +1,10 @@
+#org 0x1DBA8D
+getbattleturncounter
+jumpifbytenotequal 0x0 0x81DBAA6
+getmovescriptid
+jumpifbytenotinlist 0x81DBAA7 0x81DBAA6
+randomjumpiflessthan 0x50 0x81DBAA6
+addtoviabilityscore 0x2
+
+#org 0x1DBAA6
+returntobattle

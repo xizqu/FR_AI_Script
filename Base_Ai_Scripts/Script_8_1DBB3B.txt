@@ -1,0 +1,40 @@
+#org 0x1DBB3C
+jumpifhealthmorethan 0x1 0x46 0x81DBB59
+jumpifhealthmorethan 0x1 0x1E 0x81DBB68
+getmovescriptid
+jumpifbyteinlist 0x81DBBFC @RandomMinus1
+jump 0x81DBB7F
+
+#org 0x1DBB59
+getmovescriptid
+jumpifbyteinlist 0x81DBBC3 @RandomMinus1
+jump 0x81DBB7F
+
+#org 0x1DBB7F
+jumpifhealthmorethan 0x0 0x46 0x81DBB9C
+jumpifhealthmorethan 0x0 0x1E 0x81DBBAB
+getmovescriptid
+jumpifbyteinlist 0x81DBC55 @RandomMinus1
+jump @Return
+
+#org 0x1DBB9C
+getmovescriptid
+jumpifbyteinlist 0x81DBC2C @RandomMinus1
+jump @Return
+
+#org 0x1DBBAB
+getmovescriptid
+jumpifbyteinlist 0x81DBC2D @RandomMinus1
+jump @Return
+
+#org 0x1DBB68
+getmovescriptid
+jumpifbyteinlist 0x81DBBD1 @RandomMinus1
+jump 0x81DBB7F
+
+#org 0x@RandomMinus1
+randomjumpiflessthan 0x32 @Return
+addtoviabilityscore 0xFE
+
+#org @Return
+returntobattle

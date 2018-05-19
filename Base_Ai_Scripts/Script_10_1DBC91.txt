@@ -1,0 +1,9 @@
+#org 0x1DBC91
+jumpifmovescriptnotequal 0x89 0x81DBCA7
+jumpifbyteequals 0x0 0x81DBCA7
+checkiffirstturn 0x1
+jumpifbyteequals 0x0 0x81DBCA7
+addtoviabilityscore 0x5
+
+#org 0x1DBCA7
+returntobattle

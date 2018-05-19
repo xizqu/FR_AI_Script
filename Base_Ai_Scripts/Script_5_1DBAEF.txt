@@ -1,0 +1,8 @@
+#org 0x1DBAEF
+getmovescriptid
+jumpifbytenotinlist 0x81DBB02 0x81DBB01
+randomjumpiflessthan 0x80 0x81DBB01
+addtoviabilityscore 0x2
+
+#org 0x1DBB01
+returntobattle

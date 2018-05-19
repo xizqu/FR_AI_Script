@@ -1,0 +1,8 @@
+#org 0x1DBADF
+getpowerofstrongestmove
+jumpifbytenotequal 0x0 0x81DBAEE
+randomjumpiflessthan 0x64 0x81DBAEE
+addtoviabilityscore 0x2
+
+#org 0x1DBAEE
+returntobattle
