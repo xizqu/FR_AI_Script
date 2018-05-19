@@ -1,0 +1,552 @@
+MOVE NAME	MOVE SCRIPT		MOVE SCRIPT
+				DEC 			HEX
+megapunch		0				0
+scratch 		0
+vicegrip 		0
+cut 			0
+wingattack		0
+slam 			0
+vinewhip		0
+megakick		0
+hornattack		0
+waterfall 		0
+tackle			0
+watergun 		0
+hydropump		0
+surf 			0
+peck			0
+drillpeck		0
+rockthrow		0
+strength		0
+eggbomb 		0
+megahorn 		0
+hypervoice 		0
+dragonclaw 		0
+
+sing 			1				01
+sleeppowder		1
+hypnosis 		1
+lovelykiss 		1
+spore 			1
+grasswhistle 	1
+
+smog 			2				02
+sludge 			2
+poisonsting		2
+sludgebomb 		2
+
+absorb			3				03
+megadrain		3
+leechlife 		3
+gigadrain 		3
+
+firepunch		4				04
+ember 			4
+flamethrower	4
+fireblast 		4
+heatwave 		4
+
+icepunch 		5				05
+icebeam 		5
+blizzard		5
+powdersnow 		5
+
+thunderpunc		6				06
+bodyslam		6
+thundershock	6
+thunderbolt		6
+lick 			6
+spark 			6
+zapcannon 		6
+dragonbreath 	6
+
+selfdestruct 	7				07
+explosion 		7
+
+dreameater 		8				08
+
+mirrormove 		9				09
+
+meditate 		10				0A
+sharpen 		10
+howl 			10
+
+harden 			11				0B
+withdraw 		11
+
+growth			13				0D
+
+doubleteam 		16				10
+
+swift			17				11
+shadowpunch 	17
+shockwave 		17
+aerialace 		17
+magicalleaf		17
+feintattack  	17
+				
+growl			18				12
+
+leer			19				13
+tailwhip		19
+
+stringshot		20 				14
+
+sand attack		23				17
+smokescreen 	23
+kinesis 		23
+flash 			23
+
+sweetscent 		24				18
+
+haze 			25				19
+
+bide  			26				1A
+
+thrash			27				1B
+petaldance		27
+outrage 		27
+
+whirlwind		28				1C
+roar 			28
+
+doubleslap		29				1D
+pinmissile		29	
+cometpunch		29
+furyattack		29
+spikecannon 	29
+barrage 		29
+furyswipes 		29
+bonerush 		29
+armthrust 		29
+bulletseed 		29
+iciclespear 	29
+rockblast 		29
+
+conversion 		30				1E
+
+rollingkick		31				1F
+bite 			31	
+headbutt		31
+boneclub 		31
+rockslide 		31
+hyperfang 		31
+
+recover 		32				20
+slackoff 		32
+
+toxic 			33				21
+
+payday 			34				22
+
+lightscreen 	35				23
+
+triattack 		36				24
+
+rest 			37				25
+
+guillotine		38				26
+horndrill		38
+fissure			38
+sheercold 		38
+
+razorwind		39				27
+
+superfang 		40				28
+
+dragonrage		41				29
+
+sandtomb 		42				2A
+firespin		42
+wrap 			42
+clamp			42
+whirlpool 		42
+
+karatechop		43				2B
+razorleaf		43
+crabhammer 		43
+slash 			43
+aeroblast 		43
+crosschop 		43
+aircutter 		43
+leafblade 		43
+
+bonemerang 		44				2C
+doublekick		44
+
+jumpkick		45				2D
+highjumpkick 	45 
+
+mist 			46				2E
+
+focusenergy 	47				2F
+
+takedown		48				30
+submission		48
+struggle 		48
+
+sweetkiss 		49				31
+supersonic 		49
+confuseray 		49
+
+swordsdance		50				32
+
+barrier 		51				33
+acidarmor 		51
+irondefense 	51
+
+agility 		52				34
+
+tailglow 		53				35
+
+amnesia 		54				36
+
+transform 		57				39
+
+charm 			58				3A
+featherdance 	58
+
+screech 		59				3B
+
+cottonspore		60				3C
+scaryface 		60
+
+faketears 		62				3E
+metalsound 		62
+
+reflect 		65				41
+
+poisonpowder	66				42
+poisongas 		66
+
+stunspore		67				43
+thunderwave		67
+glare 			67
+
+aurorabeam		68				44
+
+acid 			69 				45
+irontail 		69
+rocksmash 		69
+crushclaw 		69
+
+bubblebeam 		70				46
+bubble 			70
+constrict 		70
+icywind  		70
+rocktomb 		70
+mudshot 		70
+
+mistball 		71				47
+
+psychic			72				48
+crunch 			72 
+shadowball 		72
+lusterpurge 	72
+
+mudslap 		73				49
+octazooka 		73
+muddywater 		73
+
+skyattack 		75				4B
+
+psybeam 		76				4C
+confusion 		76
+dizzypunch 		76
+dynamicpunch 	76
+signalbeam 		76
+waterpulse		76
+
+twineedle		77				4D
+
+vitalthrow 		78				4E
+
+substitute 		79				4F
+
+hyperbeam		80				50
+frenzyplant 	80
+blastburn 		80
+hydrocannon 	80
+
+rage 			81				51
+
+mimic 			82				52
+
+metronome 		83				53
+
+leechseed		84				54
+
+splash 			85				55
+
+disable			86				56
+
+seismictoss		87				57
+nightshade		87
+
+psywave 		88				58
+
+counter			89				59
+
+encore 			90				5A
+
+painsplit		91				5B
+
+snore 			92				5C
+
+conversion2 	93				5D
+
+lockon 			94				5E
+mindreader 		94
+
+sketch 			95				5F
+
+sleeptalk 		97				61
+
+destinybond 	98				62
+
+flail 			99				63
+reversal 		99
+
+spite 			100				64
+
+falseswipe 		101				65
+
+healbell 		102				66
+aromatherapy 	102
+
+extremespeed 	103				67
+machpunch 		103
+quickattack 	103
+
+triplekick 		104				68
+
+thief 			105				69
+covet 			105
+
+spiderweb 		106				6A
+meanlook 		106
+block 			106
+
+nightmare 		107				6B
+
+minimize 		108				6C
+
+curse 			109				6D
+
+protect 		111				6F
+detect 			111
+
+spikes 			112				70
+
+foresight 		113				71
+odorsleuth 		113
+
+perishsong 		114				72
+
+sandstorm 		115				73
+
+endure			116				74
+
+rollout 		117				75
+iceball 		117
+
+swagger 		118				76
+
+furycutter   	119				77
+
+attract 		120				78
+
+return 			121				79
+
+present 		122				7A
+
+frustration 	123				7B
+
+safeguard 		124				7C
+
+sacredfire		125				7D
+flamewheel 		125
+
+magnitude 		126				7E
+
+batonpass 		127				7F
+
+pursuit 		128				80
+
+rapidspin 		129				81
+
+sonicboom 		130				82
+
+morningsun 		132				84
+
+synthesis 		133				85
+
+moonlight 		134				86
+
+hiddenpower 	135				87
+
+raindance 		136				88
+
+sunnyday 		137				89
+
+steelwing 		138				8A
+
+metalclaw 		139				8B
+meteormash 		139
+
+silverwind 		140				8C
+ancientpower 	140
+
+bind			142				8E
+bellydrum 		142
+
+psychup 		143				8F
+
+mirrorcoat 		144				90
+
+skullbash		145				91
+
+twister 		146				92
+
+earthquake		147				93
+
+futuresight 	148				94
+doomdesire 		148
+
+gust 			149				95
+
+astonish 		150				96
+needlearm 		150
+extrasensory 	150
+stomp			150
+
+solarbeam		151				97
+
+thunder 		152				98
+
+teleport 		153				99
+
+beatup 			154				9A
+
+fly 			155				9B
+dig 			155
+bounce 			155
+dive 			155
+
+defensecurl 	156				9C
+
+softboiled 		157				9D
+milkdrink 		157
+
+fakeout 		158				9E
+
+uproar 			159				9F
+
+stockpile 		160				A0
+
+spitup 			161				A1
+
+swallow 		162				A2
+
+hail 			164				A4
+
+torment 		165				A5
+
+flatter 		166				A6
+
+willowisp 		167				A7
+
+memento 		168				A8
+
+facade 			169				A9
+
+focuspunch 		170				AA
+
+smellingsalts 	171				AB
+
+followme 		172				AC
+
+naturepower 	173				AD
+
+charge 			174				AE
+
+taunt 			175				AF
+
+helpinghand 	176				B0
+
+trick 			177				B1
+
+roleplay 		178				B2
+
+wish 			179				B3
+
+assist 			180				B4
+
+ingrain 		181				B5
+
+superpower 		182				B6
+
+magiccoat 		183				B7
+
+recycle 		184				B8
+
+revenge 		185				B9
+
+brickbreak 		186				BA
+
+yawn 			187				BB
+
+knockoff 		188				BC
+
+endeavor 		189				BD
+
+eruption 		190				BE
+waterspout 		190
+
+skillswap 		191				BF
+
+imprison	 	192				C0
+
+refresh 		193				C1
+
+grudge 			194				C2
+
+snatch 			195				C3
+
+lowkick			196				C4
+
+secretpower		197				C5
+
+doubleedge		198				C6
+volttackle 		198
+
+teeterdance 	199				C7
+
+blazekick 		200				C8
+
+mudsport	 	201				C9
+
+poisonfang 		202				CA
+
+weatherball 	203				CB
+
+overheat 		204				CC
+psychoboost 	204
+
+tickle 			205				CD
+
+cosmicpower 	206				CE
+
+skyuppercut 	207				CF
+
+bulkup 			208				D0
+
+poisontail 		209				D1
+
+watersport		210				D2
+
+calmmind 		211				D3
+
+dragondance 	212				D4
+
+camouflage 		213				D5

@@ -1,0 +1,1743 @@
+//Trainer AI Script 0 0x1D9C74
+
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#include moves.bsh
+#include movescripts.bsh
+#include abilities.bsh
+#include items.bsh
+#include pokemon.bsh
+#include counters.bsh
+#include tables.bsh
+#include status.bsh
+#include commonphrases.bsh
+
+#dynamic 0x1D9C74
+#org @Start
+GetMoveRange
+JumpIfByteEquals 0x10 @MoveScriptCheck
+
+#org @PositiveChecks
+JumpIfNoDamagingMoveInMoveset @AirBalloonCheck
+JumpIfMoveKnocksOut @KOMove
+GetPowerOfStrongestMove
+jumpifbyteequals 0x2 @MostPowerful
+jump @NotVeryEffectiveChecks
+
+#org @KOMove
+JumpIfMoveScriptEquals MOVESCR_Explosion @AirBalloonCheck
+JumpIfMoveWouldHitFirst BANK_USER @AI_Plus7
+AddToViabilityScore 0x2
+jump @AirBalloonCheck
+
+#org @MostPowerful
+RandomJumpIfLessThan 64 @NotVeryEffectiveChecks
+AddToViabilityScore 0x1
+jump @AirBalloonCheck
+
+#org @AI_Plus7
+AddToViabilityScore 0x7
+
+#org @AirBalloonCheck
+GetHeldItemEffect BANK_TARGET
+JumpIfByteEquals EFFECT_AIRBALLOON @DiscourageGround
+
+#org @GrassPowderCheck
+GetHeldItemEffect BANK_TARGET
+jumpifbyteequals EFFECT_SAFETYGOGGLES @CheckForPowder
+GetType 0x0
+JumpIfByteEquals TYPE_GRASS @CheckForPowder
+GetType 0x2
+JumpIfByteEquals TYPE_GRASS @CheckForPowder
+jumpifstatbuffnotequal BANK_TARGET 0x0 TYPE_GRASS @MoldBreakersCheck
+#org @CheckForPowder
+GetMoveID
+JumpIfHalfwordInList PowderTable @AI_Minus10
+
+#org @MoldBreakersCheck
+GetAbility BANK_USER
+JumpIfByteEquals ABILITY_MOLDBREAKER @TerrainCheck
+JumpIfByteEquals ABILITY_TURBOBLAZE @TerrainCheck
+JumpIfByteEquals ABILITY_TERAVOLT @TerrainCheck
+
+#org @TimeSaverCheck
+GetAbility BANK_TARGET
+JumpIfByteInList AbilityToCheckForList @AbsorbAbilitiesCheck
+GetAbility BANK_TARGETPARTNER
+JumpIfByteNotInList AbilityToCheckForList @TerrainCheck
+jump @CheckPartnerAbilities
+
+#org @AbsorbAbilitiesCheck
+GetAbility BANK_TARGET
+JumpIfByteEquals ABILITY_VOLTABSORB @DiscourageElectric
+JumpIfByteEquals ABILITY_MOTORDRIVE @DiscourageElectric
+JumpIfByteEquals ABILITY_LIGHTNINGROD @DiscourageElectric
+JumpIfByteEquals ABILITY_WATERABSORB @DiscourageWater
+JumpIfByteEquals ABILITY_DRYSKIN @DiscourageWater
+JumpIfByteEquals ABILITY_STORMDRAIN @DiscourageWater
+JumpIfByteEquals ABILITY_FLASHFIRE @DiscourageFire
+JumpIfByteEquals ABILITY_SAPSIPPER @DiscourageGrass
+JumpIfByteEquals ABILITY_LEVITATE @DiscourageGround
+JumpIfByteEquals ABILITY_WONDERGUARD @DiscourageUnlessSuperEffective
+
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+#org @SoundProofCheck
+JumpIfByteNotEqual ABILITY_SOUNDPROOF @OvercoatCheck
+GetMoveID
+JumpIfHalfwordInList SoundMoveTable @AI_Minus10
+Jump @CheckPartnerAbilities
+
+#org @OvercoatCheck
+JumpIfByteNotEqual ABILITY_OVERCOAT @BulletproofCheck
+GetMoveID
+JumpIfHalfwordInList PowderTable @AI_Minus10
+Jump @CheckPartnerAbilities
+
+#org @BulletproofCheck
+JumpIfByteNotEqual ABILITY_BULLETPROOF @PriorityBlockCheck
+GetMoveID
+JumpIfHalfwordInList BombTable @AI_Minus10
+Jump @CheckPartnerAbilities
+
+#org @PriorityBlockCheck
+JumpIfByteEquals ABILITY_DAZZLING @BlockPriority
+JumpIfByteNotEqual ABILITY_QUEENLYMAJESTY @AromaVeilCheck
+
+#org @BlockPriority
+GetMovePriority
+JumpIfByteNotEqual 0x0 @AI_Minus10
+jump @CheckPartnerAbilities
+
+#org @AromaVeilCheck
+JumpIfByteNotEqual ABILITY_AROMAVEIL @SweetVeilCheck
+GetMoveID
+JumpIfHalfwordInList AromaVeilTable @AI_Minus10
+Jump @CheckPartnerAbilities
+
+#org @SweetVeilCheck
+JumpIfByteNotEqual ABILITY_SWEETVEIL @FlowerVeilCheck
+GetMoveScriptID
+JumpIfByteEquals MOVESCR_SetSleep @AI_Minus10
+JumpIfByteEquals MOVESCR_SetYawn @AI_Minus10
+Jump @CheckPartnerAbilities
+
+#org @FlowerVeilCheck
+JumpIfByteNotEqual ABILITY_FLOWERVEIL @MagicBounceCheck
+jumpifstatbuffequal BANK_TARGET 0x0 TYPE_GRASS @FVP2
+GetType 0x0
+JumpIfByteEquals TYPE_GRASS @FVP2
+GetType 0x2
+JumpIfByteNotEqual TYPE_GRASS @CheckPartnerAbilities
+#org @FVP2
+GetMoveScriptID
+JumpIfByteInList SetStatusTable @AI_Minus10
+JumpIfByteInList StatLowerTable @AI_Minus10
+Jump @CheckPartnerAbilities
+
+#org @MagicBounceCheck
+JumpIfByteNotEqual ABILITY_MAGICBOUNCE @ClearBodyCheck
+CheckIfMoveFlagSet 0x4 //Check Reflected By Magic COat
+JumpIfByteEquals 0x1 @AI_Minus10
+Jump @CheckPartnerAbilities
+
+#org @ClearBodyCheck
+JumpIfByteEquals ABILITY_CONTRARY @CBP2
+JumpIfByteEquals ABILITY_CLEARBODY @CBP2
+JumpIfByteEquals ABILITY_FULLMETALBODY @CBP2
+JumpIfByteNotEqual ABILITY_WHITESMOKE @HyperCutterCheck
+#org @CBP2
+GetMoveScriptID
+JumpIfByteInList StatLowerTable @AI_Minus10
+Jump @CheckPartnerAbilities
+
+#org @HyperCutterCheck
+JumpIfByteNotEqual ABILITY_HYPERCUTTER @KeenEyeCheck
+JumpIfMoveScriptEquals MOVESCR_TargetAtk-1 @AI_Minus10
+JumpIfMoveScriptEquals MOVESCR_TargetAtk-2 @AI_Minus10
+Jump @CheckPartnerAbilities
+
+#org @KeenEyeCheck
+JumpIfByteNotEqual ABILITY_KEENEYE @BigPecksCheck
+JumpIfMoveScriptEquals MOVESCR_TargetAcc-1 @AI_Minus10
+JumpIfMoveScriptEquals MOVESCR_TargetAcc-2 @AI_Minus10
+Jump @CheckPartnerAbilities
+
+#org @BigPecksCheck
+JumpIfByteNotEqual ABILITY_BIGPECKS @DefiantCheck
+JumpIfMoveScriptEquals MOVESCR_TargetDef-1 @AI_Minus10
+JumpIfMoveScriptEquals MOVESCR_TargetDef-2 @AI_Minus10
+Jump @CheckPartnerAbilities
+
+#org @DefiantCheck
+JumpIfByteNotEqual ABILITY_DEFIANT @CompetitiveCheck
+GetMoveScriptID
+JumpIfByteInList StatLowerTable @AI_Minus8
+Jump @CheckPartnerAbilities
+
+#org @CompetitiveCheck
+JumpIfByteNotEqual ABILITY_COMPETITIVE @ComatoseCheck
+GetMoveScriptID
+JumpIfByteInList StatLowerTable @AI_Minus8
+Jump @CheckPartnerAbilities
+
+#org @ComatoseCheck
+JumpIfByteNotEqual ABILITY_COMATOSE @JustifiedCheck
+GetMoveScriptID
+JumpIfByteInList SetStatusTable @AI_Minus10
+Jump @CheckPartnerAbilities
+
+#org @JustifiedCheck
+JumpIfByteNotEqual ABILITY_JUSTIFIED @WonderSkinCheck
+GetType 0x8 //Move Type
+JumpIfFreeVarEquals TYPE_DARK @AI_Minus10
+Jump @CheckPartnerAbilities
+
+#org @WonderSkinCheck
+JumpIfByteNotEqual ABILITY_WONDERSKIN @LeafGuardCheck
+GetKindOfMove
+jumpifbyteequals 0x2 @AI_Minus8
+Jump @CheckPartnerAbilities
+
+#org @LeafGuardCheck
+JumpIfByteNotEqual ABILITY_LEAFGUARD @CheckPartnerAbilities
+GetWeather
+JumpIfByteNotEqual SUN @CheckPartnerAbilities
+getability BANK_USER
+JumpIfByteEquals ABILITY_CLOUDNINE @CheckPartnerAbilities
+JumpIfByteEquals ABILITY_AIRLOCK @CheckPartnerAbilities
+getability BANK_USERPARTNER
+JumpIfByteEquals ABILITY_CLOUDNINE @CheckPartnerAbilities
+JumpIfByteEquals ABILITY_AIRLOCK @CheckPartnerAbilities
+getability BANK_TARGETPARTNER
+JumpIfByteEquals ABILITY_CLOUDNINE @CheckPartnerAbilities
+JumpIfByteEquals ABILITY_AIRLOCK @CheckPartnerAbilities
+GetMoveScriptID
+JumpIfByteInList SetStatusTable @AI_Minus10
+Jump @CheckPartnerAbilities
+
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+#org @DiscourageElectric
+GetType 0x8 //Move Type
+JumpIfFreeVarEquals TYPE_ELECTRIC @AI_Minus12
+Jump @CheckPartnerAbilities
+
+#org @DiscourageWater
+GetType 0x8 //Move Type
+JumpIfFreeVarEquals TYPE_WATER @AI_Minus12
+Jump @CheckPartnerAbilities
+
+#org @DiscourageFire
+GetType 0x8 //Move Type
+JumpIfFreeVarEquals TYPE_FIRE @AI_Minus12
+Jump @CheckPartnerAbilities
+
+#org @DiscourageGrass
+GetType 0x8 //Move Type
+JumpIfFreeVarEquals TYPE_GRASS @AI_Minus12
+Jump @CheckPartnerAbilities
+
+#org @DiscourageGround
+GetType 0x8 //Move Type
+JumpIfFreeVarEquals TYPE_GROUND @AI_Minus10
+Jump @CheckPartnerAbilities
+
+#org @DiscourageUnlessSuperEffective
+JumpIfDamageBonusEquals 0x50 @CheckPartnerAbilities
+Jump @AI_Minus10
+
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+#org @CheckPartnerAbilities
+GetAbility BANK_TARGETPARTNER
+JumpIfByteEquals ABILITY_LIGHTNINGROD @DiscourageElectric2
+JumpIfByteEquals ABILITY_STORMDRAIN @DiscourageWater2
+
+#org @PartnerSweetVeilCheck
+JumpIfByteNotEqual ABILITY_SWEETVEIL @PartnerFlowerVeilCheck
+GetMoveScriptID
+JumpIfByteEquals MOVESCR_SetSleep @AI_Minus10
+JumpIfByteEquals MOVESCR_SetYawn @AI_Minus10
+
+#org @PartnerFlowerVeilCheck
+GetAbility BANK_TARGETPARTNER
+JumpIfByteNotEqual ABILITY_FLOWERVEIL @PartnerAromaVeilCheck
+jumpifstatbuffequal BANK_TARGET 0x0 TYPE_GRASS @PFVP2
+GetType 0x0
+JumpIfByteEquals TYPE_GRASS @PFVP2
+GetType 0x2
+JumpIfByteNotEqual TYPE_GRASS @PartnerAromaVeilCheck
+#org @PFVP2
+GetMoveScriptID
+JumpIfByteInList SetStatusTable @AI_Minus10
+JumpIfByteInList StatLowerTable @AI_Minus10
+
+#org @PartnerAromaVeilCheck
+GetAbility BANK_TARGETPARTNER
+JumpIfByteNotEqual ABILITY_AROMAVEIL @TerrainCheck
+GetMoveID
+JumpIfHalfwordInList AromaVeilTable @AI_Minus10
+
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+#org @TerrainCheck
+GetGrounding BANK_TARGET
+JumpIfByteEquals 0x0 @MiniorCheck
+GetTerrain
+JumpIfByteEquals ELECTRIC_TERRAIN @ElectricTerrainCheck
+JumpIfByteEquals MISTY_TERRAIN @MistyTerrainCheck
+JumpIfByteNotEqual PSYCHIC_TERRAIN @MiniorCheck
+
+#org @PsychicTerrainCheck
+GetMovePriority
+JumpIfByteNotEqual 0x0 @AI_Minus10
+jump @MiniorCheck
+
+#org @MistyTerrainCheck
+GetMoveScriptID
+JumpIfByteInList SetStatusTable @AI_Minus10
+Jump @GravityCheck
+
+#org @ElectricTerrainCheck
+GetMoveScriptID
+JumpIfByteEquals MOVESCR_SetSleep @AI_Minus10
+JumpIfByteEquals MOVESCR_SetYawn @AI_Minus10
+
+#org @MiniorCheck
+GetSpecies BANK_TARGET
+JumpIfHalfwordNotEqual PKMN_MINIORSHIELD @GravityCheck
+GetMoveScriptID
+JumpIfByteInList SetStatusTable @AI_Minus10
+
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+#org @GravityCheck
+GetFieldCounter GravityCounter
+jumpifbyteequals 0x0 @ThroatChopCheck
+GetMoveID
+JumpIfByteInList GravityTable @AI_Minus10
+
+#org @ThroatChopCheck
+GetPersonalCounter BANK_USER ThroatChopCounter
+JumpIfByteEquals 0x0 @HarshSunCheck
+GetMoveID
+JumpIfByteInList SoundMoveTable @AI_Minus10
+
+#org @HarshSunCheck
+GetPrimordialWeather
+JumpIfByteNotEqual ABILITY_DESOLATELAND @HeavyRainCheck
+GetPowerofConsideredMove
+JumpIfByteEquals 0x0 @MoveScriptCheck //Status Move
+Jump @DiscourageWater2
+
+#org @HeavyRainCheck
+GetPrimordialWeather
+JumpIfByteNotEqual ABILITY_PRIMORDIALSEA @MoveScriptCheck
+GetPowerofConsideredMove
+JumpIfByteEquals 0x0 @MoveScriptCheck //Status Move
+Jump @DiscourageFire2
+
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+#org @DiscourageElectric2
+GetType 0x8 //Move Type
+JumpIfFreeVarEquals TYPE_ELECTRIC @AI_Minus12
+Jump @MoveScriptCheck
+
+#org @DiscourageWater2
+GetType 0x8 //Move Type
+JumpIfFreeVarEquals TYPE_WATER @AI_Minus12
+
+#org @DiscourageFire2
+GetType 0x8 //Move Type
+JumpIfFreeVarEquals TYPE_FIRE @AI_Minus12
+
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+#org @MoveScriptCheck
+JumpIfMoveScriptEquals MOVESCR_SetSleep @AI_SetSleep
+JumpIfMoveScriptEquals MOVESCR_DrainHP @AI_DrainHP
+JumpIfMoveScriptEquals MOVESCR_Explosion @AI_Explode
+JumpIfMoveScriptEquals MOVESCR_DreamEater @AI_DreamEater
+JumpIfMoveScriptEquals MOVESCR_MirrorMove @AI_Minus10
+
+JumpIfMoveScriptEquals MOVESCR_UserAtk+1 @AI_Minus_10_Atk_Max
+JumpIfMoveScriptEquals MOVESCR_UserDef+1 @AI_Minus_10_Def_Max
+JumpIfMoveScriptEquals MOVESCR_UserSpd+1 @AI_Minus_10_Spd_Max
+JumpIfMoveScriptEquals MOVESCR_UserSpAtk+1 @AI_Minus_10_SpAtk_Max
+JumpIfMoveScriptEquals MOVESCR_UserSpDef+1 @AI_Minus_10_SpDef_Max
+JumpIfMoveScriptEquals MOVESCR_UserAcc+1 @AI_Minus_10_Acc_Max
+JumpIfMoveScriptEquals MOVESCR_UserEvsn+1 @AI_Minus_10_Evsn_Max
+
+JumpIfMoveScriptEquals MOVESCR_TargetAtk-1 @AI_Minus_10_Atk_Min
+JumpIfMoveScriptEquals MOVESCR_TargetDef-1 @AI_Minus_10_Def_Min
+JumpIfMoveScriptEquals MOVESCR_TargetSpd-1 @AI_Minus_10_Spd_Min
+JumpIfMoveScriptEquals MOVESCR_TargetSpAtk-1 @AI_Minus_10_SpAtk_Min
+JumpIfMoveScriptEquals MOVESCR_TargetSpDef-1 @AI_Minus_10_SpDef_Min
+JumpIfMoveScriptEquals MOVESCR_TargetAcc-1 @AI_Minus_10_Acc_Min
+JumpIfMoveScriptEquals MOVESCR_TargetEvsn-1 @AI_Minus_10_Evsn_Min
+
+JumpIfMoveScriptEquals MOVESCR_Haze @AI_minus_10_if_stats_favour_attacker
+JumpIfMoveScriptEquals MOVESCR_Roar @AI_Force_Switch
+JumpIfMoveScriptEquals MOVESCR_Conversion @Return
+JumpIfMoveScriptEquals MOVESCR_Recovery @AI_Recovery
+
+JumpIfMoveScriptEquals MOVESCR_ToxicPoisonTarget @AI_SetPoison
+JumpIfMoveScriptEquals MOVESCR_LightScreen @AI_CheckLightScreen
+JumpIfMoveScriptEquals MOVESCR_Rest @AI_Recovery
+JumpIfMoveScriptEquals MOVESCR_0HKO @AI_0HKO
+JumpIfMoveScriptEquals MOVESCR_TrapAndDamage @AI_Trap_Damage
+JumpIfMoveScriptEquals MOVESCR_JumpKick @AI_JumpKick
+JumpIfMoveScriptEquals MOVESCR_Mist @AI_Mist
+JumpIfMoveScriptEquals MOVESCR_1/4Recoil @AI_Recoil
+JumpIfMoveScriptEquals MOVESCR_FocusEnergy @AI_FocusEnergy
+JumpIfMoveScriptEquals MOVESCR_ConfuseTarget @AI_Confuse
+
+JumpIfMoveScriptEquals MOVESCR_UserAtk+2 @AI_Minus_10_Atk_Max
+JumpIfMoveScriptEquals MOVESCR_UserDef+2 @AI_Minus_10_Def_Max
+JumpIfMoveScriptEquals MOVESCR_UserSpd+2 @AI_Minus_10_Spd_Max
+JumpIfMoveScriptEquals MOVESCR_UserSpAtk+2 @AI_Minus_10_SpAtk_Max
+JumpIfMoveScriptEquals MOVESCR_UserSpDef+2 @AI_Minus_10_SpDef_Max
+JumpIfMoveScriptEquals MOVESCR_UserAcc+2 @AI_Minus_10_Acc_Max
+JumpIfMoveScriptEquals MOVESCR_UserEvsn+2 @AI_Minus_10_Evsn_Max
+
+JumpIfMoveScriptEquals MOVESCR_Transform @AI_Transform
+
+JumpIfMoveScriptEquals MOVESCR_TargetAtk-2 @AI_Minus_10_Atk_Min
+JumpIfMoveScriptEquals MOVESCR_TargetDef-2 @AI_Minus_10_Def_Min
+JumpIfMoveScriptEquals MOVESCR_TargetSpd-2 @AI_Minus_10_Spd_Min
+JumpIfMoveScriptEquals MOVESCR_TargetSpAtk-2 @AI_Minus_10_SpAtk_Min
+JumpIfMoveScriptEquals MOVESCR_TargetSpDef-2 @AI_Minus_10_SpDef_Min
+JumpIfMoveScriptEquals MOVESCR_TargetAcc-2 @AI_Minus_10_Acc_Min
+JumpIfMoveScriptEquals MOVESCR_TargetEvsn-2 @AI_Minus_10_Evsn_Min
+
+JumpIfMoveScriptEquals MOVESCR_Reflect @AI_Reflect
+JumpIfMoveScriptEquals MOVESCR_PoisonTarget @AI_SetPoison
+JumpIfMoveScriptEquals MOVESCR_ParalyzeTarget @AI_SetParalyze
+JumpIfMoveScriptEquals MOVESCR_Substitute @AI_Substitute
+JumpIfMoveScriptEquals MOVESCR_Mimic @Return
+JumpIfMoveScriptEquals MOVESCR_Metronome @Return
+JumpIfMoveScriptEquals MOVESCR_LeechSeed @AI_LeechSeed
+JumpIfMoveScriptEquals MOVESCR_Splash @AI_Minus10
+JumpIfMoveScriptEquals MOVESCR_Disable @AI_Disable
+JumpIfMoveScriptEquals MOVESCR_Counter @AI_Counter
+
+JumpIfMoveScriptEquals MOVESCR_Encore @AI_Encore
+JumpIfMoveScriptEquals MOVESCR_PainSplit @AI_PainSplit
+JumpIfMoveScriptEquals MOVESCR_Snore @AI_SleepingMoves
+JumpIfMoveScriptEquals MOVESCR_Conversion2 @Return
+JumpIfMoveScriptEquals MOVESCR_LockOn @AI_LockOn
+JumpIfMoveScriptEquals MOVESCR_SleepTalk @AI_SleepingMoves
+JumpIfMoveScriptEquals MOVESCR_DestinyBond @AI_DestinyBond
+JumpIfMoveScriptEquals MOVESCR_Flail @AI_Flail
+JumpIfMoveScriptEquals MOVESCR_Spite @Return
+JumpIfMoveScriptEquals MOVESCR_FalseSwipe @AI_FalseSwipe
+JumpIfMoveScriptEquals MOVESCR_Aromatherapy @AI_Refresh
+
+JumpIfMoveScriptEquals MOVESCR_MeanLook @AI_Trap
+JumpIfMoveScriptEquals MOVESCR_Nightmare @AI_Nightmare
+JumpIfMoveScriptEquals MOVESCR_Minimize @AI_Minus_10_Acc_Max
+JumpIfMoveScriptEquals MOVESCR_Curse @AI_Curse
+JumpIfMoveScriptEquals MOVESCR_Protect @AI_Protect
+JumpIfMoveScriptEquals MOVESCR_EntryHazards @AI_EntryHazards
+
+JumpIfMoveScriptEquals MOVESCR_Foresight @AI_Foresight
+JumpIfMoveScriptEquals MOVESCR_PerishSong @AI_PerishSong
+JumpIfMoveScriptEquals MOVESCR_Sandstorm @AI_Sandstorm
+JumpIfMoveScriptEquals MOVESCR_Endure @AI_Endure
+JumpIfMoveScriptEquals MOVESCR_Swagger @AI_Confuse
+JumpIfMoveScriptEquals MOVESCR_Attract @AI_Attract
+
+JumpIfMoveScriptEquals MOVESCR_Safeguard @AI_Safeguard
+JumpIfMoveScriptEquals MOVESCR_BatonPass @AI_BatonPass
+JumpIfMoveScriptEquals MOVESCR_RapidSpin @AI_RapidSpin
+JumpIfMoveScriptEquals MOVESCR_MorningSun @AI_Recovery
+JumpIfMoveScriptEquals MOVESCR_Synthesis @AI_Recovery
+JumpIfMoveScriptEquals MOVESCR_Moonlight @AI_Recovery
+
+JumpIfMoveScriptEquals MOVESCR_Rain @AI_Rain
+JumpIfMoveScriptEquals MOVESCR_Sun @AI_Sun
+JumpIfMoveScriptEquals MOVESCR_BellyDrum @AI_BellyDrum
+JumpIfMoveScriptEquals MOVESCR_PsychUp @AI_PsychUp
+JumpIfMoveScriptEquals MOVESCR_FutureAttack @AI_FutureAttack
+JumpIfMoveScriptEquals MOVESCR_Teleport @AI_Minus10
+
+JumpIfMoveScriptEquals MOVESCR_DefenseCurl @AI_Minus_10_Def_Max
+JumpIfMoveScriptEquals MOVESCR_Softboiled @AI_Recovery
+JumpIfMoveScriptEquals MOVESCR_FakeOut @AI_FakeOut
+JumpIfMoveScriptEquals MOVESCR_Stockpile @AI_Stockpile
+JumpIfMoveScriptEquals MOVESCR_Swallow @AI_Swallow
+JumpIfMoveScriptEquals MOVESCR_SpitUp @AI_SpitUp
+JumpIfMoveScriptEquals MOVESCR_Hail @AI_Hail
+
+JumpIfMoveScriptEquals MOVESCR_Torment @AI_Torment
+JumpIfMoveScriptEquals MOVESCR_Flatter @AI_Confuse
+JumpIfMoveScriptEquals MOVESCR_SetBurn @AI_SetBurn
+JumpIfMoveScriptEquals MOVESCR_Memento @AI_Memento
+JumpIfMoveScriptEquals MOVESCR_FollowMe @AI_HelpingHand
+JumpIfMoveScriptEquals MOVESCR_Charge @Return
+JumpIfMoveScriptEquals MOVESCR_Taunt @AI_Taunt
+JumpIfMoveScriptEquals MOVESCR_HelpingHand @AI_HelpingHand
+JumpIfMoveScriptEquals MOVESCR_Trick @AI_ItemManipulation
+JumpIfMoveScriptEquals MOVESCR_RolePlay @AI_RolePlay
+JumpIfMoveScriptEquals MOVESCR_Wish @Return
+JumpIfMoveScriptEquals MOVESCR_Assist @Return
+JumpIfMoveScriptEquals MOVESCR_Ingrain @AI_Ingrain
+
+JumpIfMoveScriptEquals MOVESCR_MagicCoat @Return
+JumpIfMoveScriptEquals MOVESCR_Recycle @AI_Recycle
+JumpIfMoveScriptEquals MOVESCR_SetYawn @AI_SetYawn
+JumpIfMoveScriptEquals MOVESCR_Endeavor @AI_PainSplit
+JumpIfMoveScriptEquals MOVESCR_SkillSwap @AI_SkillSwap
+JumpIfMoveScriptEquals MOVESCR_Imprison @AI_Imprison
+JumpIfMoveScriptEquals MOVESCR_Refresh @AI_Refresh
+JumpIfMoveScriptEquals MOVESCR_Grudge @AI_BatonPass
+JumpIfMoveScriptEquals MOVESCR_Snatch @Return
+JumpIfMoveScriptEquals MOVESCR_1/3Recoil @AI_Recoil
+JumpIfMoveScriptEquals MOVESCR_TeeterDance @AI_TeeterDance
+JumpIfMoveScriptEquals MOVESCR_MudSport @AI_MudSport
+JumpIfMoveScriptEquals MOVESCR_Tickle @AI_Tickle
+JumpIfMoveScriptEquals MOVESCR_CosmicPower @AI_CosmicPower
+JumpIfMoveScriptEquals MOVESCR_BulkUp @AI_BulkUp
+JumpIfMoveScriptEquals MOVESCR_WaterSport @AI_WaterSport
+JumpIfMoveScriptEquals MOVESCR_CalmMind @AI_CalmMind
+JumpIfMoveScriptEquals MOVESCR_DragonDance @AI_DragonDance
+
+JumpIfMoveScriptEquals MOVESCR_StatSwapperSplitter @Return
+JumpIfMoveScriptEquals MOVESCR_StoredPower @AI_StoredPower
+JumpIfMoveScriptEquals MOVESCR_FrostBreath @AI_FrostBreath
+JumpIfMoveScriptEquals MOVESCR_NaturalGift_MeFirst @AI_NaturalGift_MeFirst
+JumpIfMoveScriptEquals MOVESCR_ClearSmog @AI_ClearSmog
+JumpIfMoveScriptEquals MOVESCR_SpeedBalls @AI_Speed_Balls
+JumpIfMoveScriptEquals MOVESCR_Terrain @AI_Terrain
+JumpIfMoveScriptEquals MOVESCR_FieldEffects @AI_FieldEffects
+JumpIfMoveScriptEquals MOVESCR_Fling @AI_Fling
+JumpIfMoveScriptEquals MOVESCR_AttackBlockers @AI_AttackBlockers
+JumpIfMoveScriptEquals MOVESCR_TypeChangers @AI_TypeChangers
+JumpIfMoveScriptEquals MOVESCR_HealTarget @AI_HealTarget
+JumpIfMoveScriptEquals MOVESCR_TopsyTurvyElectrify @AI_TopsyTurvyElectrify
+JumpIfMoveScriptEquals MOVESCR_TeamEffects @AI_TeamEffects
+JumpIfMoveScriptEquals MOVESCR_Synchronoise @AI_Synchronoise
+Jump @AI_Standard_Damage
+
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+#org @Return
+Returntobattle
+
+#org @AI_SetSleep
+GetAbility BANK_TARGET
+JumpIfByteEquals ABILITY_INSOMNIA @AI_Minus10
+JumpIfByteEquals ABILITY_VITALSPIRIT @AI_Minus10
+JumpIfStatus1Equals BANK_TARGET 0xFF @AI_Minus10
+
+#org @SafeguardCheck
+GetAbility BANK_USER
+jumpifbyteequals ABILITY_INFILTRATOR @Return
+jumpifstatus4equals BANK_TARGET 0x20 @AI_Minus10
+jump @SubstituteCheck
+
+//@@@@
+
+#org @AI_DrainHP
+GetAbility BANK_TARGET
+JumpIfByteEquals ABILITY_LIQUIDOOZE @AI_Minus6
+jumpifmoveidequals MOVE_STRENGTHSAP @AI_Minus_10_Atk_Min
+jump @AI_Standard_Damage
+
+#org @AI_Explode
+JumpIfDamageBonusEquals Immune @AI_Minus10
+GetAbility BANK_USER
+JumpIfByteEquals ABILITY_MOLDBREAKER @AI_Minus4
+JumpIfByteEquals ABILITY_TURBOBLAZE @AI_Minus4
+JumpIfByteEquals ABILITY_TERAVOLT @AI_Minus4
+JumpIfByteEquals ABILITY_DAMP @AI_Minus10
+GetAbility BANK_TARGET
+JumpIfByteEquals ABILITY_DAMP @AI_Minus10
+GetAbility BANK_TARGETPARTNER
+JumpIfByteEquals ABILITY_DAMP @AI_Minus10
+GetAbility BANK_USERPARTNER
+JumpIfByteEquals ABILITY_DAMP @AI_Minus10
+CountViablePokemonOnTeam BANK_USER
+JumpIfByteNotEqual 0x0 @Return
+CountViablePokemonOnTeam BANK_USER
+JumpIfByteNotEqual 0x0 @AI_Minus10
+Jump @AI_Minus4
+
+#org @AI_DreamEater
+getability BANK_TARGET
+JumpIfByteEquals ABILITY_COMATOSE @Return
+JumpIfStatus1NotEqual BANK_TARGET 0x7 @AI_Minus8
+jump @AI_DrainHP
+
+#org @AI_Minus_10_Atk_Max
+jumpifstatbuffequal BANK_USER Attack 0xC @AI_Minus10
+ReturnToBattle
+
+//@@@@
+
+#org @AI_Minus_10_Def_Max
+jumpifmoveidequals MOVE_FLOWERSHIELD @FlowerShield
+jumpifmoveidequals MOVE_MAGNETICFLUX @MagneticFlux
+jumpifmoveidequals MOVE_AROMATICMIST @AI_HelpingHand
+jumpifstatbuffequal BANK_USER Defense 0xC @AI_Minus10
+ReturnToBattle
+
+#org @FlowerShield
+gettype 0x5 //Partner Type 1
+JumpIfFreeVarEquals TYPE_GRASS @Return
+gettype 0x6 //Partner Type 2
+JumpIfFreeVarNotEqual TYPE_GRASS @AI_Minus10
+returntobattle
+
+#org @MagneticFlux
+GetAbility BANK_USER
+jumpifbyteequals ABILITY_PLUS @AI_CosmicPower
+jumpifbyteequals ABILITY_MINUS @AI_CosmicPower
+GetAbility BANK_USERPARTNER
+jumpifbyteequals ABILITY_PLUS @Return
+jumpifbyteequals ABILITY_MINUS @Return
+jump @AI_CosmicPower
+
+//@@@@
+
+#org @AI_Minus_10_Spd_Max
+jumpifstatbuffequal BANK_USER Speed 0xC @AI_Minus10
+ReturnToBattle
+
+//@@@@
+
+#org @AI_Minus_10_SpAtk_Max
+jumpifmoveidequals MOVE_WORKUP @WorkUp
+jumpifmoveidequals MOVE_ROTOTILLER @Rototiller
+jumpifmoveidequals MOVE_GEARUP @GearUp
+jumpifstatbuffequal BANK_USER SpecialAttack 0xC @AI_Minus10
+ReturnToBattle
+
+#org @WorkUp
+jumpifstatbuffnotequal BANK_USER Attack 0xC @Return
+jumpifstatbuffequal BANK_USER SpecialAttack 0xC @AI_Minus10
+ReturnToBattle
+
+#org @Rototiller
+GetType 0x1
+JumpIfFreeVarEquals TYPE_GRASS @CheckRotoGrounding
+GetType 0x3
+JumpIfFreeVarEquals TYPE_GRASS @CheckRotoGrounding
+jumpifstatbuffequal BANK_USER 0x0 TYPE_GRASS @CheckRotoGrounding
+GetType 0x5 //Partner Type 1
+JumpIfFreeVarEquals TYPE_GRASS @Return
+GetType 0x6 //Partner Type 1
+JumpIfFreeVarNotEqual TYPE_GRASS @AI_Minus10
+ReturnToBattle
+
+#org @CheckRotoGrounding
+GetGrounding BANK_USER
+jumpifbyteequals 0x0 @AI_Minus10
+ReturnToBattle
+
+#org @GearUp
+GetAbility BANK_USER
+jumpifbyteequals ABILITY_PLUS @WorkUp
+jumpifbyteequals ABILITY_MINUS @WorkUp
+GetAbility BANK_USERPARTNER
+jumpifbyteequals ABILITY_PLUS @Return
+jumpifbyteequals ABILITY_MINUS @Return
+jump @WorkUp
+
+//@@@@
+
+#org @AI_Minus_10_SpDef_Max
+jumpifstatbuffequal BANK_USER SpecialDefense 0xC @AI_Minus10
+ReturnToBattle
+
+#org @AI_Minus_10_Acc_Max
+jumpifstatbuffequal BANK_USER Accuracy 0xC @AI_Minus10
+ReturnToBattle
+
+#org @AI_Minus_10_Evsn_Max
+jumpifmoveidequals MOVE_ACUPRESSURE @Return
+jumpifstatbuffequal BANK_USER Evasion 0xC @AI_Minus10
+ReturnToBattle
+
+//@@@@
+
+#org @AI_Minus_10_Atk_Min
+jumpifmoveidequals MOVE_PLAYNICE @PlayNice
+jumpifmoveidequals MOVE_NOBLEROAR @PlayNice
+jumpifmoveidequals MOVE_TEARFULLOOK @PlayNice
+jumpifmoveidequals MOVE_VENOMDRENCH @VenomDrench
+jumpifstatbuffequal BANK_TARGET Attack 0x0 @AI_Minus10
+jump @SubstituteCheck
+
+#org @PlayNice
+jumpifstatbuffnotequal BANK_TARGET Attack 0x0 @Return
+jumpifstatbuffequal BANK_TARGET SpecialAttack 0x0 @AI_Minus10
+jump @SubstituteCheck
+
+#org @VenomDrench
+jumpifstatus1notequal BANK_TARGET 0x88 @AI_Minus10
+jumpifstatbuffnotequal BANK_TARGET Speed 0x0 @Return
+Jump @PlayNice
+
+//@@@@
+
+#org @AI_Minus_10_Def_Min
+jumpifstatbuffequal BANK_TARGET Defense 0x0 @AI_Minus10
+jump @SubstituteCheck
+
+#org @AI_Minus_10_Spd_Min
+jumpifstatbuffequal BANK_TARGET Speed 0x0 @AI_Minus10
+jump @SubstituteCheck
+
+#org @AI_Minus_10_SpAtk_Min
+jumpifstatbuffequal BANK_TARGET SpecialAttack 0x0 @AI_Minus10
+jumpifmoveidequals MOVE_CAPTIVATE @AttractObliviousCheck
+jump @SubstituteCheck
+
+#org @AI_Minus_10_SpDef_Min
+jumpifstatbuffequal BANK_TARGET SpecialDefense 0x0 @AI_Minus10
+jump @SubstituteCheck
+
+#org @AI_Minus_10_Acc_Min
+jumpifstatbuffequal BANK_TARGET Accuracy 0x0 @AI_Minus10
+jump @SubstituteCheck
+
+#org @AI_Minus_10_Evsn_Min
+jumpifstatbuffequal BANK_TARGET Evasion 0x0 @AI_Minus10
+jump @SubstituteCheck
+
+#org @AI_minus_10_if_stats_favour_attacker
+jumpifstatbufflessthan 0x1 0x1 0x6 @Return
+jumpifstatbufflessthan 0x1 0x2 0x6 @Return
+jumpifstatbufflessthan 0x1 0x3 0x6 @Return
+jumpifstatbufflessthan 0x1 0x4 0x6 @Return
+jumpifstatbufflessthan 0x1 0x5 0x6 @Return
+jumpifstatbufflessthan 0x1 0x6 0x6 @Return
+jumpifstatbufflessthan 0x1 0x7 0x6 @Return
+jumpifstatbuffmorethan 0x0 0x1 0x6 @Return
+jumpifstatbuffmorethan 0x0 0x2 0x6 @Return
+jumpifstatbuffmorethan 0x0 0x3 0x6 @Return
+jumpifstatbuffmorethan 0x0 0x4 0x6 @Return
+jumpifstatbuffmorethan 0x0 0x5 0x6 @Return
+jumpifstatbuffmorethan 0x0 0x6 0x6 @Return
+jumpifstatbuffmorethan 0x0 0x7 0x6 @Return
+jump @AI_Minus10
+
+#org @AI_Standard_Damage
+GetHeldItemEffect BANK_TARGET
+jumpifbyteequals EFFECT_RINGTARGET @WonderGuardCheck
+jumpifdamagebonusequals Immune @AI_Minus10
+
+#org @WonderGuardCheck
+getability 0x0
+jumpifbytenotequal ABILITY_WONDERGUARD @Return
+jumpifdamagebonusequals Weak @Return
+GetAbility BANK_USER
+JumpIfByteEquals ABILITY_MOLDBREAKER @Return
+JumpIfByteEquals ABILITY_TURBOBLAZE @Return
+JumpIfByteEquals ABILITY_TERAVOLT @Return
+jump @AI_Minus10
+
+#org @AI_Force_Switch
+jumpifmoveidequals MOVE_DRAGONTAIL @AI_Standard_Damage
+jumpifmoveidequals MOVE_CIRCLETHROW @AI_Standard_Damage
+countviablepokemononteam 0x0
+jumpifbyteequals 0x0 @AI_Minus10
+getability 0x0
+jumpifbyteequals ABILITY_SUCTIONCUPS @AI_Minus10
+returntobattle
+
+//@@@@
+
+#org @AI_Recovery
+jumpifmoveidequals MOVE_PURIFY @Purify
+jumpifhealthmorethan BANK_USER 94 @AI_Minus10
+returntobattle
+
+#org @Purify
+jumpifstatus1notequal BANK_TARGET 0xFF @AI_Minus10
+jumpifhealthequals BANK_USER 100 @AI_Minus10
+returntobattle
+
+//@@@@
+
+#org @AI_SetPoison
+jumpifmoveidequals MOVE_TOXICTHREAD @ToxicThread
+#org @Psn
+getability BANK_TARGET
+jumpifbyteequals ABILITY_IMMUNITY @AI_Minus10
+jumpifstatus1equals 0x0 0xFF @AI_Minus10
+getability BANK_USER
+jumpifbyteequals ABILITY_CORROSION @SafeguardCheck
+gettype 0x0
+jumpifbyteequals 0x8 @AI_Minus10
+jumpifbyteequals 0x3 @AI_Minus10
+gettype 0x2
+jumpifbyteequals 0x8 @AI_Minus10
+jumpifbyteequals 0x3 @AI_Minus10
+jump @SafeguardCheck
+
+#org @ToxicThread
+jumpifstatbuffequal BANK_TARGET Speed 0x0 @Psn
+jump @SubstituteCheck
+
+//@@@@
+
+#org @AI_CheckLightScreen
+jumpifstatus4equals BANK_USER 0x2 @AI_Minus10
+returntobattle
+
+#org @AI_0HKO
+jumpifdamagebonusequals Immune @AI_Minus10
+jumpifbattlerlevelsare 0x1 @AI_Minus10
+GetAbility BANK_USER
+JumpIfByteEquals ABILITY_MOLDBREAKER @Return
+JumpIfByteEquals ABILITY_TURBOBLAZE @Return
+JumpIfByteEquals ABILITY_TERAVOLT @Return
+getability 0x0
+jumpifbyteequals ABILITY_STURDY @AI_Minus10
+returntobattle
+
+#org @AI_Trap_Damage
+gettype 0x0
+JumpIfFreeVarEquals TYPE_GHOST @AI_Minus6
+gettype 0x2
+JumpIfFreeVarEquals TYPE_GHOST @AI_Minus6
+jumpifstatbuffequal BANK_TARGET 0x0 TYPE_GHOST @AI_Minus6
+returntobattle
+
+#org @AI_Mist
+jumpifstatus4equals BANK_USER 0x100 @AI_Minus10
+returntobattle
+
+#org @AI_FocusEnergy
+jumpifstatus2equals BANK_USER 0x100000 @AI_Minus10
+returntobattle
+
+#org @AI_Confuse
+jumpifstatus2equals 0x0 0x6 @AI_Minus10
+GetHeldItemEffect BANK_TARGET
+JumpIfByteEquals EFFECT_MENTALHERB @AI_Minus6
+GetAbility BANK_USER
+JumpIfByteEquals ABILITY_MOLDBREAKER @Return
+JumpIfByteEquals ABILITY_TURBOBLAZE @Return
+JumpIfByteEquals ABILITY_TERAVOLT @Return
+getability 0x0
+jumpifbyteequals ABILITY_OWNTEMPO @AI_Minus10
+jump @SubstituteCheck
+
+
+#org @AI_Transform
+jumpifstatus2equals BANK_USER 0x200000 @AI_Minus10 //Transformed
+jumpifstatus2equals BANK_TARGET 0x1200000 @AI_Minus10 //Substitute, Transformed
+returntobattle
+
+//@@@@
+
+#org @AI_Reflect
+jumpifmoveidequals MOVE_AuroraVeil @AuroraVeil
+jumpifstatus4equals BANK_USER 0x1 @AI_Minus10
+returntobattle
+
+#org @AuroraVeil
+getweather
+jumpifbytenotequal 0x4 @AI_Minus10
+getteamcounter BANK_USER AuroraVeilCounter
+jumpifbytenotequal 0x0 @AI_Minus10
+jumpifstatus4equals BANK_USER 0x3 @AI_Minus6
+ReturnToBattle
+
+//@@@@
+
+#org @AI_SetParalyze
+jumpifdamagebonusequals Immune @AI_Minus10
+jumpifstatus1equals 0x0 0xFF @AI_Minus10
+gettype 0x0
+jumpifbyteequals TYPE_ELECTRIC @AI_Minus10
+gettype 0x2
+jumpifbyteequals TYPE_ELECTRIC @AI_Minus10
+GetAbility BANK_USER
+JumpIfByteEquals ABILITY_MOLDBREAKER @SafeguardCheck
+JumpIfByteEquals ABILITY_TURBOBLAZE @SafeguardCheck
+JumpIfByteEquals ABILITY_TERAVOLT @SafeguardCheck
+getability 0x0
+jumpifbyteequals ABILITY_LIMBER @AI_Minus10
+jump @SafeguardCheck
+
+#org @AI_Substitute
+jumpifstatus2equals BANK_USER 0x1000000 @AI_Minus8
+jumpifhealthlessthan BANK_USER 26 @AI_Minus10
+GetAbility BANK_TARGET
+jumpifbyteequals ABILITY_INFILTRATOR @AI_Minus8
+returntobattle
+
+//@@@@
+
+#org @AI_LeechSeed
+jumpifmoveidequals MOVE_AQUARING @AquaRing
+jumpifstatus3equals BANK_TARGET 0x4 @AI_Minus10
+gettype 0x0
+jumpifbyteequals TYPE_GRASS @AI_Minus10
+gettype 0x2
+jumpifbyteequals TYPE_GRASS @AI_Minus10
+jumpifstatbuffequal BANK_TARGET 0x0 TYPE_GRASS @AI_Minus10
+GetAbility BANK_TARGET
+JumpIfByteEquals ABILITY_LIQUIDOOZE @AI_Minus10
+jump @SubstituteCheck
+
+#org @AquaRing
+jumpifstatus3equals BANK_USER 0x800000 @AI_Minus10
+returntobattle
+
+//@@@@
+
+#org @AI_Disable
+jumpifmovesetrestricted BANK_TARGET 0x0 @AI_Minus10
+
+#org @DisableEncoreChecks
+GetMoveLastUsed BANK_TARGET
+jumpifhalfwordequal 0x0 @AI_Minus10
+jumpifhalfwordequal 0xFFFF @AI_Minus10
+GetHeldItemEffect BANK_TARGET
+JumpIfByteEquals EFFECT_MENTALHERB @AI_Minus6
+returntobattle
+
+//@@@@
+
+#org @AI_Counter
+jumpifmoveidequals MOVE_METALBURST @MetalBurst
+jump @AI_Standard_Damage
+
+#org @MetalBurst
+JumpIfMoveWouldHitFirst BANK_USER @AI_Minus10
+jump @AI_Standard_Damage
+
+//@@@@
+
+#org @AI_Encore
+jumpifmovesetrestricted BANK_TARGET 0x1 @AI_Minus10
+jump @DisableEncoreChecks
+
+#org @AI_SleepingMoves
+getability BANK_USER
+JumpIfByteEquals ABILITY_COMATOSE @Return
+jumpifstatus1notequal BANK_USER 0x7 @AI_Minus8
+returntobattle
+
+//@@@@
+
+#org @AI_LockOn
+jumpifmoveidequals MOVE_LASERFOCUS @LaserFocus
+jumpifstatus3equals BANK_USER 0x10 @AI_Minus10
+GetAbility BANK_USER
+jumpifbyteequals ABILITY_NOGUARD @AI_Minus10
+GetAbility BANK_TARGET
+jumpifbyteequals ABILITY_NOGUARD @AI_Minus10
+returntobattle
+
+#org @LaserFocus
+GetAbility BANK_TARGET
+jumpifbyteequals ABILITY_SHELLARMOR @AI_Minus8
+jumpifbyteequals ABILITY_BATTLEARMOR @AI_Minus8
+Returntobattle
+
+//@@@@
+
+#org @AI_Flail
+jumpifhealthmorethan BANK_USER 35 @AI_Minus6
+returntobattle
+
+#org @AI_Trap
+jumpifstatus2equals 0x0 0x400E000 @AI_Minus10
+gettype 0x0
+jumpiffreevarequals TYPE_GHOST @AI_Minus10
+gettype 0x2
+jumpiffreevarequals TYPE_GHOST @AI_Minus10
+jumpifstatbuffequal BANK_TARGET 0x0 TYPE_GHOST @AI_Minus10
+gethelditemeffect BANK_TARGET
+jumpifbyteequals EFFECT_SHEDSHELL @AI_Minus10
+jump @SubstituteCheck
+
+#org @AI_Nightmare
+jumpifstatus2equals 0x0 0x8000000 @AI_Minus10
+getability BANK_TARGET
+JumpIfByteEquals ABILITY_COMATOSE @Return
+jumpifstatus1notequal 0x0 0x7 @AI_Minus8
+jump @SubstituteCheck
+
+#org @AI_Curse
+gettype 0x1
+jumpifbyteequals TYPE_GHOST @GhostCurse
+gettype 0x3
+jumpifbyteequals TYPE_GHOST @GhostCurse
+jumpifstatbuffequal BANK_USER 0x0 TYPE_GHOST @GhostCurse
+GetAbility BANK_USER
+jumpifbyteequals ABILITY_CONTRARY @AI_Minus10
+jumpifstatbuffequal BANK_USER Attack 0xC @AI_Minus10
+jumpifstatbuffequal BANK_USER Defense 0xC @AI_Minus10
+returntobattle
+#org @GhostCurse
+JumpIfStatus2Equals BANK_TARGET 0x10000000 @AI_Minus10
+jumpifhealthlessthan BANK_USER 50 @AI_Minus6
+returntobattle
+
+//@@@@
+
+#org @AI_Protect
+jumpifmoveidequals MOVE_QUICKGUARD @AI_HelpingHand
+jumpifmoveidequals MOVE_WIDEGUARD @AI_HelpingHand
+jumpifmoveidequals MOVE_CRAFTYSHIELD @AI_HelpingHand
+jumpifmoveidequals MOVE_MATBLOCK @MatBlock
+JumpIfStatus2Equals BANK_TARGET 0x400000 @AI_Minus10//Recharge
+GetProtectActivity BANK_USER
+jumpifbytemorethan 0x0 @AI_Minus10
+ReturnToBattle
+
+#org @MatBlock
+checkiffirstturn BANK_USER
+jumpifbyteequals 0x0 @AI_Minus10
+checkifdoublebattle
+jumpifbyteequals 0x0 @AI_Minus6
+returntobattle
+
+//@@@@
+
+#org @AI_EntryHazards
+CountViablePokemonOnTeam BANK_TARGET
+jumpifbyteequals 0x0 @AI_Minus10
+jumpifmoveidequals MOVE_TOXICSPIKES @ToxicSpikes
+jumpifmoveidequals MOVE_STEALTHROCK @StealthRock
+jumpifmoveidequals MOVE_STICKYWEB @StickyWeb
+GetSpikesLayer BANK_TARGET
+jumpifbyteequals 0x3 @AI_Minus10
+ReturnToBattle
+
+#org @ToxicSpikes
+GetToxicSpikesLayer BANK_TARGET
+jumpifbyteequals 0xC @AI_Minus10
+ReturnToBattle
+
+#org @StealthRock
+GetStealthRockLayer BANK_TARGET
+jumpifbyteequals 0x10 @AI_Minus10
+ReturnToBattle
+
+#org @StickyWeb
+GetStickyWebLayer BANK_TARGET
+jumpifbyteequals 0x20 @AI_Minus10
+ReturnToBattle
+
+//@@@@
+
+#org @AI_Foresight
+#org @AI_Foresight
+jumpifmoveidequals MOVE_MIRACLEEYE @MiracleEye
+jumpifstatus2equals BANK_TARGET 0x20000000 @AI_Minus10
+returntobattle
+
+#org @MiracleEye
+jumpifstatus3equals BANK_TARGET 0x40000000 @AI_Minus10
+Gettype 0x0
+jumpifbyteequals TYPE_DARK @Return
+Gettype 0x2
+jumpifbytenotequal TYPE_DARK @AI_Minus6
+returntobattle
+
+//@@@@
+
+#org @AI_PerishSong
+jumpifstatus3equals BANK_TARGET 0x20 @AI_Minus10
+returntobattle
+
+#org @AI_Sandstorm
+GetPrimordialWeather
+JumpIfByteNotEqual 0x0 @AI_Minus8
+getweather
+jumpifbyteequals 0x2 @AI_Minus8
+returntobattle
+
+#org @AI_Attract
+jumpifstatus2equals 0x0 0xF0000 @AI_Minus10
+#org @AttractObliviousCheck
+GetAbility BANK_USER
+JumpIfByteEquals ABILITY_MOLDBREAKER @GenderCheck
+JumpIfByteEquals ABILITY_TURBOBLAZE @GenderCheck
+JumpIfByteEquals ABILITY_TERAVOLT @GenderCheck
+getability BANK_TARGET
+jumpifbyteequals ABILITY_OBLIVIOUS @AI_Minus10
+#org @GenderCheck
+getgender 0x1
+jumpifbyteequals 0x0 @Boy
+jumpifbyteequals 0xFE @Girl
+jump @AI_Minus10
+#org @Boy
+getgender 0x0
+jumpifbyteequals 0xFE @Return
+jump @AI_Minus10
+#org @Girl
+getgender 0x0
+jumpifbyteequals 0x0 @Return
+jump @AI_Minus10
+
+#org @AI_Safeguard
+jumpifstatus4equals 0x1 0x20 @AI_Minus10
+returntobattle
+
+//@@@@
+
+#org @AI_BatonPass
+jumpifmoveidequals MOVE_UTURN @Return
+jumpifmoveidequals MOVE_VOLTSWITCH @Return
+countviablepokemononteam BANK_USER
+jumpifbyteequals 0x0 @AI_Minus10
+jumpifmoveidequals MOVE_BATONPASS @PassOnChecks
+returntobattle
+
+#org @PassOnChecks
+jumpifstatbuffmorethan BANK_USER 0x1 0x6 @Return
+jumpifstatbuffmorethan BANK_USER 0x2 0x6 @Return
+jumpifstatbuffmorethan BANK_USER 0x3 0x6 @Return
+jumpifstatbuffmorethan BANK_USER 0x4 0x6 @Return
+jumpifstatbuffmorethan BANK_USER 0x5 0x6 @Return
+jumpifstatbuffmorethan BANK_USER 0x6 0x6 @Return
+jumpifstatbuffmorethan BANK_USER 0x7 0x6 @Return
+jumpifstatus3equals BANK_USER 0xA00400 @Return //Aqua Ring, Magnet Rise, Ingrain
+JumpIfStatus2Equals BANK_USER 0x1000000 @Return //Substitute
+jump @AI_Minus6
+
+//@@@@
+
+#org @AI_RapidSpin
+jumpifmoveidequals MOVE_DEFOG @Defog
+jumpifstatus3equals BANK_USER 0x4 @Return
+jumpifstatus2equals BANK_USER 0xE000 @Return
+#org @SpinCheck
+GetSpikesLayer BANK_USER
+jumpifbytenotequal 0x0 @Return
+GetToxicSpikesLayer BANK_USER
+jumpifbytenotequal 0x0 @Return
+GetStealthRockLayer BANK_USER
+jumpifbytenotequal 0x0 @Return
+GetStickyLayer BANK_USER
+jumpifbytenotequal 0x0 @Return
+Jump @AI_Minus6
+
+#org @Defog
+GetAbility BANK_TARGET
+JumpIfByteEquals ABILITY_KEENEYE @AI_Minus10
+JumpIfByteEquals ABILITY_CLEARBODY @AI_Minus10
+JumpIfByteEquals ABILITY_FULLMETALBODY @AI_Minus10
+JumpIfByteEquals ABILITY_WHITESMOKE @AI_Minus10
+jumpifstatbuffequal BANK_TARGET Accuracy 0x0 @AI_Minus10
+jumpifstatus4equals BANK_TARGET 0x123 @Return
+getteamcounter BANK_TARGET AuroraVeilCounter
+jumpifbytenotequal 0x0 @Return
+Jump @SpinCheck
+
+//@@@@
+
+#org @AI_Rain
+GetPrimordialWeather
+JumpIfByteNotEqual 0x0 @AI_Minus8
+getweather
+jumpifbyteequals 0x1 @AI_Minus8
+returntobattle
+
+#org @AI_Sun
+GetPrimordialWeather
+JumpIfByteNotEqual 0x0 @AI_Minus8
+getweather
+jumpifbyteequals 0x3 @AI_Minus8
+returntobattle
+
+//@@@@
+
+#org @AI_BellyDrum
+jumpifmoveidequals MOVE_MINDBLOWN @MindBlown
+jumpifstatbuffequal BANK_USER 0x1 0xC @AI_Minus10
+returntobattle
+
+#org @MindBlown
+jumpifhealthlessthan BANK_USER 51 @AI_Minus4
+jump @AI_Standard_Damage
+
+//@@@@
+
+#org @AI_PsychUp
+jumpifmoveidequals MOVE_SPECTRALTHIEF @Return
+jump @AI_minus_10_if_stats_favour_attacker
+
+#org @AI_FutureAttack
+jumpifstatus4equals BANK_TARGET 0x40 @AI_Minus10
+returntobattle
+
+#org @AI_FakeOut
+checkiffirstturn BANK_USER
+jumpifbyteequals 0x0 @AI_Minus10
+jump @AI_Standard_Damage
+
+#org @AI_Stockpile
+getstockpilecounter BANK_USER
+JumpIfByteMoreThan 0x1 @AI_Minus6
+returntobattle
+
+#org @AI_Swallow
+getstockpilecounter BANK_USER
+jumpifbyteequals 0x0 @AI_Minus10
+jump @AI_Recovery
+
+#org @AI_SpitUp
+getstockpilecounter BANK_USER
+jumpifbyteequals 0x0 @AI_Minus10
+jump @AI_Standard_Damage
+
+#org @AI_Hail
+GetPrimordialWeather
+JumpIfByteNotEqual 0x0 @AI_Minus8
+getweather
+jumpifbyteequals 0x4 @AI_Minus8
+returntobattle
+
+#org @AI_Torment
+jumpifstatus2equals 0x0 0x80000000 @AI_Minus10
+GetHeldItemEffect BANK_TARGET
+JumpIfByteEquals EFFECT_MENTALHERB @AI_Minus6
+returntobattle
+
+#org @AI_SetBurn
+jumpifdamagebonusequals Immune @AI_Minus10
+jumpifstatus1equals BANK_TARGET 0xFF @AI_Minus10
+gettype 0x0
+jumpifbyteequals TYPE_FIRE @AI_Minus10
+gettype 0x2
+jumpifbyteequals TYPE_FIRE @AI_Minus10
+GetAbility BANK_USER
+JumpIfByteEquals ABILITY_MOLDBREAKER @SafeguardCheck
+JumpIfByteEquals ABILITY_TURBOBLAZE @SafeguardCheck
+JumpIfByteEquals ABILITY_TERAVOLT @SafeguardCheck
+getability 0x0
+jumpifbyteequals ABILITY_WATERVEIL @AI_Minus10
+jumpifbyteequals ABILITY_WATERBUBBLE @AI_Minus10
+jump @SafeguardCheck
+
+#org @AI_Memento
+countviablepokemononteam 0x1
+jumpifbyteequals 0x0 @AI_Minus10
+jumpifmoveidequals MOVE_HEALINGWISH @Return
+jumpifmoveidequals MOVE_LUNARDANCE @Return
+jumpifstatbuffequal BANK_TARGET 0x1 0x0 @AI_Minus10
+jumpifstatbuffequal BANK_TARGET 0x4 0x0 @AI_Minus10
+jump @SubstituteCheck
+
+#org @AI_HelpingHand
+checkifdoublebattle
+jumpifbyteequals 0x0 @AI_Minus10
+returntobattle
+
+//@@@@
+
+#org @AI_ItemManipulation
+JumpIfMoveIDEquals MOVE_BESTOW @Bestow
+getability BANK_TARGET
+jumpifbyteequals ABILITY_STICKYHOLD @AI_Minus10
+gethelditemeffect BANK_TARGET
+jumpifbyteinlist HeldItemEffectBan @AI_Minus8
+gethelditemeffect BANK_USER
+jumpifbyteinlist HeldItemEffectBan @AI_Minus8
+GetSpecies BANK_USER
+jumpifhalfwordinlist ArceusFormesList @AI_Minus8
+GetSpecies BANK_TARGET
+jumpifhalfwordinlist ArceusFormesList @AI_Minus8
+returntobattle
+
+#org @Bestow
+gethelditemeffect BANK_USER
+jumpifbyteinlist HeldItemEffectBan @AI_Minus8
+GetHeldItem BANK_TARGET
+jumpifbytenotequal 0x0 @AI_Minus10
+returntobattle
+
+//@@@@
+
+#org @AI_Ingrain
+jumpifstatus3equals BANK_USER 0x400 @AI_Minus10
+returntobattle
+
+//@@@@
+
+#org @AI_Recycle
+jumpifmoveidequals MOVE_BELCH @Belch
+getdp08item 0x1
+jumpifbyteequals 0x0 @AI_Minus10
+returntobattle
+
+#org @Belch
+GetBelchCounter BANK_USER
+jumpifbyteequals 0x0 @AI_Minus10
+jump @AI_Standard_Damage
+
+//@@@@
+
+#org @AI_SetYawn
+jumpifstatus3equals BANK_TARGET 0x1800 @AI_Minus10
+jump @AI_SetSleep
+
+#org @AI_Imprison
+jumpifstatus3equals BANK_TARGET 0x2000 @AI_Minus10
+returntobattle
+
+//@@@@
+
+#org @AI_SkillSwap
+jumpifmoveidequals MOVE_WORRYSEED @WorrySeed
+jumpifmoveidequals MOVE_GASTROACID @GastroAcid
+jumpifmoveidequals MOVE_ENTRAINMENT @Entrainment
+jumpifmoveidequals MOVE_COREENFORCER @AI_Standard_Damage
+jumpifmoveidequals MOVE_SIMPLEBEAM @SimpleBeam
+GetAbility BANK_USER
+Jumpifbyteinlist SkillSwapBanList @AI_Minus10
+GetAbility BANK_TARGET
+Jumpifbyteinlist SkillSwapBanList @AI_Minus10
+ReturnToBattle
+
+#org @WorrySeed
+GetAbility BANK_TARGET
+jumpifbyteequals ABILITY_INSOMNIA @AI_Minus10
+#org @WSSecondHalf
+Jumpifbyteinlist WorrySeedBanList @AI_Minus10
+jump @SubstituteCheck
+
+#org @GastroAcid
+GetAbility BANK_TARGET
+jumpifbyteequals 0x0 @AI_Minus10
+jump @WSSecondHalf
+
+#org @Entrainment
+GetAbility BANK_USER
+Jumpifbyteinlist EntrainmentUserBanList @AI_Minus10
+GetAbility BANK_TARGET
+jump @WSSecondHalf
+
+#org @SimpleBeam
+GetAbility BANK_TARGET
+jumpifbyteequals ABILITY_SIMPLE @AI_Minus10
+jump @WSSecondHalf
+
+//@@@@
+
+#org @AI_Refresh
+jumpifstatus1notequal BANK_USER 0xD8 @AI_Minus10
+jumpifmoveidequals MOVE_PSYCHOSHIFT @PsychoShift
+returntobattle
+
+#org @PsychoShift
+jumpifstatus1equals BANK_USER 0x88 @AI_SetPoison
+jumpifstatus1equals BANK_USER 0x10 @AI_SetBurn
+jumpifstatus1equals BANK_USER 0x40 @AI_SetParalyze
+jump @AI_Minus10
+
+//@@@@
+
+#org @AI_MudSport
+GetFieldCounter MudSportCounter
+jumpifbytenotequal 0x0 @AI_Minus10
+returntobattle
+
+#org @AI_Tickle
+jumpifstatbuffnotequal BANK_TARGET Attack 0x0 @Return
+jumpifstatbuffequal BANK_TARGET Defense 0x0 @AI_Minus10
+jump @SubstituteCheck
+
+#org @AI_CosmicPower
+jumpifstatbuffnotequal BANK_USER Defense 0xC @Return
+jumpifstatbuffequal BANK_USER SpecialDefense 0xC @AI_Minus10
+returntobattle
+
+//@@@@
+
+#org @AI_BulkUp
+jumpifmoveidequals MOVE_COIL @Coil
+#org @BulkUpBoost
+jumpifstatbuffnotequal BANK_USER Attack 0xC @Return
+jumpifstatbuffequal BANK_USER Defense 0xC @AI_Minus10
+returntobattle
+
+#org @Coil
+jumpifstatbuffnotequal BANK_USER Accuracy 0xC @Return
+jump @BulkUpBoost
+
+//@@@@
+
+#org @AI_WaterSport
+GetFieldCounter WaterSportCounter
+jumpifbytenotequal 0x0 @AI_Minus10
+returntobattle
+
+//@@@@
+
+#org @AI_CalmMind
+jumpifstatbuffnotequal BANK_USER Speed 0xC @Return
+jumpifmoveidequals MOVE_QUIVERDANCE @QuiverDance
+jumpifmoveidequals MOVE_GEOMANCY @QuiverDance
+#org @CalmMindBoost
+jumpifstatbuffnotequal BANK_USER SpecialAttack 0xC @Return
+jumpifstatbuffequal BANK_USER SpecialDefense 0xC @AI_Minus10
+returntobattle
+
+#org @QuiverDance
+jumpifstatbuffnotequal BANK_USER Speed 0xC @Return
+jump @CalmMindBoost
+
+//@@@@
+
+#org @AI_DragonDance
+jumpifmoveidequals MOVE_SHELLSMASH @ShellSmash
+#org @DragonDanceBoost
+jumpifstatbuffnotequal BANK_USER Attack 0xC @Return
+jumpifstatbuffequal BANK_USER Speed 0xC @AI_Minus10
+returntobattle
+
+#org @ShellSmash
+GetAbility BANK_USER
+jumpifbyteequals ABILITY_CONTRARY @AI_CosmicPower
+jumpifstatbuffnotequal BANK_USER SpecialAttack 0xC @Return
+jump @DragonDanceBoost
+
+//@@@@
+
+#org @AI_StoredPower
+jumpifmoveidequals MOVE_PUNISHMENT @Punishment
+jumpifstatbuffmorethan BANK_USER Attack 0x6 @Return
+jumpifstatbuffmorethan BANK_USER Defense 0x6 @Return
+jumpifstatbuffmorethan BANK_USER Speed 0x6 @Return
+jumpifstatbuffmorethan BANK_USER SpecialAttack 0x6 @Return
+jumpifstatbuffmorethan BANK_USER SpecialDefense 0x6 @Return
+jumpifstatbuffmorethan BANK_USER Accuracy 0x6 @Return
+jumpifstatbuffmorethan BANK_USER Evasion 0x6 @Return
+jump @AI_Minus6
+
+#org @Punishment
+jumpifstatbuffmorethan BANK_TARGET Attack 0x6 @Return
+jumpifstatbuffmorethan BANK_TARGET Defense 0x6 @Return
+jumpifstatbuffmorethan BANK_TARGET Speed 0x6 @Return
+jumpifstatbuffmorethan BANK_TARGET SpecialAttack 0x6 @Return
+jumpifstatbuffmorethan BANK_TARGET SpecialDefense 0x6 @Return
+jumpifstatbuffmorethan BANK_TARGET Accuracy 0x6 @Return
+jumpifstatbuffmorethan BANK_TARGET Evasion 0x6 @Return
+jump @AI_Minus6
+
+//@@@@
+
+#org @AI_FrostBreath
+GetAbility BANK_TARGET
+jumpifbyteequals ABILITY_SHELLARMOR @AI_Minus4
+jumpifbyteequals ABILITY_BATTLEARMOR @AI_Minus4
+jump @AI_Standard_Damage
+
+//@@@@
+
+#org @AI_NaturalGift_MeFirst
+jumpifmoveidequals MOVE_MEFIRST @MeFirst
+jumpifmoveidequals MOVE_TRUMPCARD @AI_Standard_Damage
+GetAbility BANK_USER
+jumpifbyteequals ABILITY_KLUTZ @AI_Minus10
+GetFieldCounter MagicRoomCounter
+jumpifbytenotequal 0x0 @AI_Minus10
+GetHeldItemPocketNumber BANK_USER
+jumpifbytenotequal 0x5 @AI_Minus10
+jump @AI_Standard_Damage
+
+#org @MeFirst
+JumpIfMoveWouldHitFirst BANK_TARGET @AI_Minus10
+jump @SubstituteCheck
+
+//@@@@
+
+#org @AI_ClearSmog
+jumpifstatbuffmorethan 0x0 0x1 0x6 @AI_Standard_Damage
+jumpifstatbuffmorethan 0x0 0x2 0x6 @AI_Standard_Damage
+jumpifstatbuffmorethan 0x0 0x3 0x6 @AI_Standard_Damage
+jumpifstatbuffmorethan 0x0 0x4 0x6 @AI_Standard_Damage
+jumpifstatbuffmorethan 0x0 0x5 0x6 @AI_Standard_Damage
+jumpifstatbuffmorethan 0x0 0x6 0x6 @AI_Standard_Damage
+jumpifstatbuffmorethan 0x0 0x7 0x6 @AI_Standard_Damage
+jump @AI_Minus6
+
+//@@@@
+
+#org @AI_Speed_Balls
+jumpifmoveidequals MOVE_ELECTROBALL @ElectroBall
+JumpIfMoveWouldHitFirst BANK_USER @AI_Minus6
+jump @AI_Standard_Damage
+
+#org @ElectroBall
+JumpIfMoveWouldHitFirst BANK_TARGET @AI_Minus6
+jump @AI_Standard_Damage
+
+//@@@@
+
+#org @AI_Terrain
+GetTerrain
+jumpifmoveidequals MOVE_ELECTRICTERRAIN @ElectricTerrain
+jumpifmoveidequals MOVE_GRASSYTERRAIN @GrassyTerrain
+jumpifmoveidequals MOVE_MISTYTERRAIN @MistyTerrain
+jumpifmoveidequals MOVE_PSYCHICTERRAIN @PsychicTerrain
+returntobattle
+
+#org @ElectricTerrain
+jumpifbyteequals 0x1 @AI_Minus10
+returntobattle
+
+#org @GrassyTerrain
+jumpifbyteequals 0x2 @AI_Minus10
+returntobattle
+
+#org @MistyTerrain
+jumpifbyteequals 0x3 @AI_Minus10
+returntobattle
+
+#org @PsychicTerrain
+jumpifbyteequals 0x4 @AI_Minus10
+returntobattle
+
+//@@@@
+
+#org @AI_FieldEffects
+jumpifmoveidequals MOVE_TRICKROOM @TrickRoom
+jumpifmoveidequals MOVE_MAGICROOM @MagicRoom
+jumpifmoveidequals MOVE_WONDERROOM @WonderRoom
+jumpifmoveidequals MOVE_GRAVITY @Gravity
+jumpifmoveidequals MOVE_IONDELUGE @AI_HelpingHand
+jumpifmoveidequals MOVE_PLASMAFISTS @AI_Standard_Damage
+returntobattle
+
+#org @TrickRoom
+JumpIfMoveWouldHitFirst BANK_USER @AI_Minus10
+returntobattle
+
+#org @MagicRoom
+GetFieldCounter MagicRoomCounter
+jumpifbytenotequal 0x0 @AI_Minus10
+returntobattle
+
+#org @WonderRoom
+GetFieldCounter WonderRoomCounter
+jumpifbytenotequal 0x0 @AI_Minus10
+returntobattle
+
+#org @Gravity
+GetFieldCounter GravityCounter
+jumpifbytenotequal 0x0 @AI_Minus10
+returntobattle
+
+//@@@@
+
+#org @AI_Fling
+GetAbility BANK_USER
+jumpifbyteequals ABILITY_STICKYHOLD @AI_Minus10
+GetHeldItemEffect BANK_USER
+jumpifbyteinlist HeldItemEffectBan @AI_Minus8
+GetHeldItem BANK_USER
+jumpifbyteequals 0x0 @AI_Minus8
+jump @AI_Standard_Damage
+
+//@@@@
+
+#org @AI_AttackBlockers
+jumpifmoveidequals MOVE_HEALBLOCK @HealBlock
+jumpifmoveidequals MOVE_EMBARGO @Embargo
+jumpifmoveidequals MOVE_POWDER @Return
+jumpifmoveidequals MOVE_TELEKINESIS @Telekinesis
+jumpifmoveidequals MOVE_THROATCHOP @AI_Standard_Damage
+returntobattle
+
+#org @HealBlock
+GetPersonalCounter BANK_TARGET HealBlockCounter
+jumpifbytenotequal 0x0 @AI_Minus10
+jump @SubstituteCheck
+
+#org @Embargo
+GetAbility BANK_TARGET
+jumpifbyteequals ABILITY_KLUTZ @AI_Minus10
+GetFieldCounter MagicRoomCounter
+jumpifbytenotequal 0x0 @AI_Minus10
+GetPersonalCounter BANK_TARGET EmbargoCounter
+jumpifbytenotequal 0x0 @AI_Minus10
+jump @SubstituteCheck
+
+#org @Telekinesis
+jumpifstatus3equals BANK_TARGET 0x20400400 @AI_Minus10
+GetFieldCounter GravityCounter
+jumpifbytenotequal 0x0 @AI_Minus10
+GetHeldItemEffect BANK_TARGET
+jumpifbyteequals EFFECT_IRONBALL @AI_Minus10
+GetSpecies BANK_TARGET
+jumpifhalfwordinlist TelekinesisBanList @AI_Minus10
+jump @SubstituteCheck
+
+//@@@@
+
+#org @AI_TypeChangers
+jumpifmoveidequals MOVE_SOAK @Soak
+jumpifmoveidequals MOVE_TRICKORTREAT @TrickOrTreat
+jumpifmoveidequals MOVE_FORESTSCURSE @ForestsCurse
+returntobattle
+
+#org @Soak
+GetType 0x0
+jumpifbyteequals TYPE_WATER @AI_Minus10
+GetType 0x2
+jumpifbyteequals TYPE_WATER @AI_Minus10
+jump @SubstituteCheck
+
+#org @TrickOrTreat
+GetType 0x0
+jumpifbyteequals TYPE_GHOST @AI_Minus10
+GetType 0x2
+jumpifbyteequals TYPE_GHOST @AI_Minus10
+jumpifstatbuffequal BANK_TARGET 0x0 TYPE_GHOST @AI_Minus10
+jump @SubstituteCheck
+
+#org @ForestsCurse
+GetType 0x0
+jumpifbyteequals TYPE_GRASS @AI_Minus10
+GetType 0x2
+jumpifbyteequals TYPE_GRASS @AI_Minus10
+jumpifstatbuffequal BANK_TARGET 0x0 TYPE_GRASS @AI_Minus10
+jump @SubstituteCheck
+
+//@@@@
+
+#org @AI_HealTarget
+jumpifmoveidequals MOVE_POLLENPUFF @AI_Standard_Damage
+jumpifhealthequals BANK_TARGET 100 @AI_Minus10
+jump @SubstituteCheck
+
+//@@@@
+
+#org @AI_TopsyTurvyElectrify
+jumpifmoveidequals MOVE_ELECTRIFY @Electrify
+jump @SubstituteCheck
+
+#org @Electrify
+JumpIfMoveWouldHitFirst BANK_TARGET @AI_Minus10
+jump @SubstituteCheck
+
+//@@@@
+
+#org @AI_TeamEffects
+jumpifmoveidequals MOVE_TAILWIND @Tailwind
+jumpifmoveidequals MOVE_LUCKYCHANT @LuckyChant
+jumpifmoveidequals MOVE_MAGNETRISE @MagnetRise
+returntobattle
+
+#org @Tailwind
+GetTeamCounter BANK_USER TailwindCounter
+jumpifbytenotequal 0x0 @AI_Minus10
+returntobattle
+
+#org @LuckyChant
+GetTeamCounter BANK_USER LuckyChantCounter
+jumpifbytenotequal 0x0 @AI_Minus10
+returntobattle
+
+#org @MagnetRise
+jumpifstatus3equals BANK_USER 0x600400 @AI_Minus10
+GetFieldCounter GravityCounter
+jumpifbytenotequal 0x0 @AI_Minus10
+GetHeldItemEffect BANK_USER
+jumpifbyteequals 98 @AI_Minus10
+GetAbility BANK_USER
+jumpifbyteequals ABILITY_LEVITATE @AI_Minus10
+returntobattle
+
+//@@@@
+
+#org @AI_Synchronoise
+DoesSynchronoiseWork
+jumpifbyteequals 0x0 @AI_Minus10
+returntobattle
+
+#org @AI_JumpKick
+GetAbility BANK_USER
+jumpifbyteequals ABILITY_MAGICGUARD @AI_Standard_Damage
+JumpIfStatBuffLessThan BANK_USER Accuracy 0x6 @AI_Minus6
+JumpIfStatBuffLessThan BANK_TARGET Evasion 0x6 @AI_Minus6
+jump @AI_Standard_Damage
+
+#org @AI_Recoil
+GetAbility BANK_USER
+jumpifbyteequals ABILITY_ROCKHEAD @AI_Standard_Damage
+jumpifbyteequals ABILITY_MAGICGUARD @AI_Standard_Damage
+JumpIfHealthLessThan BANK_USER 10 @AI_Minus4
+jump @AI_Standard_Damage
+
+#org @AI_Endure
+JumpIfHealthLessThan BANK_USER 10 @AI_Minus6
+jump @AI_Standard_Damage
+
+#org @AI_PainSplit
+JumpIfHealthMoreThan BANK_USER 85 @AI_Minus10
+JumpIfHealthLessThan BANK_TARGET 16 @AI_Minus10
+jump @SubstituteCheck
+
+#org @AI_DestinyBond
+GetMoveLastUsed BANK_USER
+jumpifhalfwordequal MOVE_DESTINYBOND @AI_Minus10
+jumpifstatus2equals BANK_USER 0x2000000 @AI_Minus10
+returntobattle
+
+#org @AI_FalseSwipe
+JumpIfMoveKnocksOut @AI_Minus10
+jump @AI_Standard_Damage
+
+#org @AI_Taunt
+JumpIfTauntTurnsNotZero @AI_Minus10
+GetHeldItemEffect BANK_TARGET
+JumpIfByteEquals EFFECT_MENTALHERB @AI_Minus6
+returntobattle
+
+#org @AI_RolePlay
+GetAbility BANK_TARGET
+Jumpifbyteinlist RolePlayBanList @AI_Minus10
+ReturnToBattle
+
+#org @AI_TeeterDance
+checkifdoublebattle
+jumpifbyteequals 0x0 @AI_Confuse
+DoesTeeterDanceWork
+jumpifbyteequals 0x0 @AI_Minus10
+returntobattle
+
+#org @SubstituteCheck
+GetAbility BANK_USER
+jumpifbyteequals ABILITY_INFILTRATOR @Return
+GetMoveID
+JumpIfHalfwordInList SoundMoveTable @Return
+JumpIfStatus2Equals BANK_TARGET 0x1000000 @AI_Minus10
+returntobattle
+
+#org @AI_Minus12
+addtoviabilityscore 0xF4
+returntobattle
+
+#org @AI_Minus10
+addtoviabilityscore 0xF6
+returntobattle
+
+#org @AI_Minus8
+addtoviabilityscore 0xF8
+returntobattle
+
+#org @AI_Minus6
+addtoviabilityscore 0xFA
+returntobattle
+
+#org @AI_Minus4
+addtoviabilityscore 0xFC
+returntobattle
+
+#org @AI_Minus2
+addtoviabilityscore 0xFE
+returntobattle
