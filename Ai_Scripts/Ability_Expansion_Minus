@@ -1,3 +1,8 @@
 Motor Drive:
-JumpIfByteEquals ABILITY_MOTORDRIVE @DiscourageElectric #Insert in @AbilityAbsorbCheck
+JumpIfByteEquals ABILITY_MOTORDRIVE @DiscourageElectric #Insert in @AbsorbAbilitiesCheck
 
+Dry Skin:
+JumpIfByteEquals ABILITY_DRYSKIN @DiscourageWater #Insert in @AbsorbAbilitiesCheck
+
+Storm Drain:
+JumpIfByteEquals ABILITY_STORMDRAIN @DiscourageWater #Insert in @AbsorbAbilitiesCheck
