@@ -1,0 +1,64 @@
+Please keep format for consistency. 
+
+Toxic Spikes:
+#org @ToxicSpikes
+GetToxicSpikesLayer BANK_TARGET
+jumpifbyteequals 0xC @AI_Minus10
+ReturnToBattle
+#Requires custom command "GetToxicSpikesLayer"
+
+Stealth Rock:
+#org @StealthRock
+GetStealthRockLayer BANK_TARGET
+jumpifbyteequals 0x10 @AI_Minus10
+ReturnToBattle
+#Requires custom command "GetStealthRockLayer"
+
+Sticky Web:
+#org @StickyWeb
+GetStickyWebLayer BANK_TARGET
+jumpifbyteequals 0x20 @AI_Minus10
+ReturnToBattle
+#Requires custom command "GetStickyWebLayer"
+
+#org @AI_FrostBreath
+GetAbility BANK_TARGET
+jumpifbyteequals ABILITY_SHELLARMOR @AI_Minus4
+jumpifbyteequals ABILITY_BATTLEARMOR @AI_Minus4
+jump @AI_Standard_Damage
+#Requires abilities shell armor and battle armor
+
+Natural Gift and MeFirst:
+#org @AI_NaturalGift_MeFirst
+jumpifmoveidequals MOVE_MEFIRST @MeFirst
+GetAbility BANK_USER
+jumpifbyteequals ABILITY_KLUTZ @AI_Minus10
+GetFieldCounter MagicRoomCounter
+jumpifbytenotequal 0x0 @AI_Minus10
+GetHeldItemPocketNumber BANK_USER
+jumpifbytenotequal 0x5 @AI_Minus10
+jump @AI_Standard_Damage
+#org @MeFirst
+JumpIfMoveWouldHitFirst BANK_TARGET @AI_Minus10
+jump @SubstituteCheck
+#Requires ability klutz and custom command "GetFieldCounter" and "GetHelditemPocketNumber"
+
+Clear Smog:
+#org @AI_ClearSmog
+jumpifstatbuffmorethan 0x0 0x1 0x6 @AI_Standard_Damage
+jumpifstatbuffmorethan 0x0 0x2 0x6 @AI_Standard_Damage
+jumpifstatbuffmorethan 0x0 0x3 0x6 @AI_Standard_Damage
+jumpifstatbuffmorethan 0x0 0x4 0x6 @AI_Standard_Damage
+jumpifstatbuffmorethan 0x0 0x5 0x6 @AI_Standard_Damage
+jumpifstatbuffmorethan 0x0 0x6 0x6 @AI_Standard_Damage
+jumpifstatbuffmorethan 0x0 0x7 0x6 @AI_Standard_Damage
+jump @AI_Minus6
+
+Gyro ball and Electro ball:
+#org @AI_Speed_Balls
+jumpifmoveidequals MOVE_ELECTROBALL @ElectroBall
+JumpIfMoveWouldHitFirst BANK_USER @AI_Minus6
+jump @AI_Standard_Damage
+#org @ElectroBall
+JumpIfMoveWouldHitFirst BANK_TARGET @AI_Minus6
+jump @AI_Standard_Damage
