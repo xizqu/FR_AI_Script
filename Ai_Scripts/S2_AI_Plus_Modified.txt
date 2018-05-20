@@ -1,0 +1,1467 @@
+#dynamic 0x8bf6f0
+
+#include counters.aisp
+#include moves.aisp
+#include movescripts.aisp
+#include abilities.aisp
+#include items.aisp
+#include pokemon.aisp
+#include tables.aisp
+#include status.aisp
+#include commonphrases.aisp
+
+#org @KOMove
+GetPowerOfStrongestMove
+JumpIfMoveKnocksOut @AI_Plus7
+JumpIfDamageBonusEquals 0x50 @SuperEffect2
+JumpIfDamageBonusEquals 0xA0 @SuperEffect4
+
+#org @SuperEffect2
+AddToViabilityScore 0x1
+jump @MoveScripts
+
+#org @SuperEffect4
+AddToViabilityScore 0x2
+jump @MoveScripts
+
+//@@@@@@@@@@@@@@@@@@@@@
+
+#org @MoveScripts
+jumpifmovescriptequals 0x1 @AI_SetSleep
+jumpifmovescriptequals MOVESCR_Sludge @Return
+jumpifmovescriptequals 0x3 @AI_AbosorbHalfDamage
+jumpifmovescriptequals MOVESCR_SetBurn @Return
+jumpifmovescriptequals MOVESCR_Snow_IceMoves @Return
+jumpifmovescriptequals MOVESCR_ThunderMoves @Return
+jumpifmovescriptequals 0x7 @AI_UserFaints
+jumpifmovescriptequals 0x8 @AI_AbsorbHalfDamageSleep
+jumpifmovescriptequals 0x9 @AI_MirrorMove
+jumpifmovescriptequals 0xA @AI_UserAtk //+1
+jumpifmovescriptequals 0xB @AI_UserDef //+1
+jumpifmovescriptequals 0xC @AI_UserSpd //+1
+jumpifmovescriptequals 0xD @AI_UserSpAtk //+1
+jumpifmovescriptequals 0xE @AI_UserSpDef //+1
+jumpifmovescriptequals 0xF @AI_UserAcc //+1
+jumpifmovescriptequals 0x10 @AI_UserEvsn //+1
+jumpifmovescriptequals 0x11 @AI_NeverMisses
+jumpifmovescriptequals 0x12 @AI_TargetAtk //-1
+jumpifmovescriptequals 0x13 @AI_TargetDef //-1
+jumpifmovescriptequals 0x14 @AI_TargetSpd //-1
+jumpifmovescriptequals 0x15 @AI_TargetSpAtk //-1
+jumpifmovescriptequals 0x16 @AI_TargetSpDef //-1
+jumpifmovescriptequals 0x17 @AI_TargetAcc //-1
+jumpifmovescriptequals 0x18 @AI_TargetEvsn //-1
+jumpifmovescriptequals 0x19 @AI_Haze
+jumpifmovescriptequals 0x1A @AI_Bide
+jumpifmovescriptequals MOVESCR_Rage_Petal_Thrash @Return
+jumpifmovescriptequals 0x1C @AI_Roar
+jumpifmovescriptequals MOVESCR_MultiHitMoves @Return
+jumpifmovescriptequals 0x1E @AI_Conversion
+jumpifmovescriptequals MOVESCR_FlinchMoves @Return
+jumpifmovescriptequals 0x20 @AI_Recover
+jumpifmovescriptequals 0x21 @AI_LeechSeed
+jumpifmovescriptequals MOVESCR_Payday @Return
+jumpifmovescriptequals 0x23 @AI_LightScreen
+jumpifmovescriptequals MOVESCR_TriAttack @Return
+jumpifmovescriptequals 0x25 @AI_Rest
+jumpifmovescriptequals 0x26 @AI_OHKO
+jumpifmovescriptequals 0x27 @AI_Razorwind
+jumpifmovescriptequals 0x28 @AI_SuperFang
+jumpifmovescriptequals MOVESCR_DragonRage @Return
+jumpifmovescriptequals 0x2A @AI_TrapAndDamage
+jumpifmovescriptequals 0x2B @AI_HighCrit
+jumpifmovescriptequals MOVESCR_Bonemerang @Return
+jumpifmovescriptequals MOVESCR_JumpKick @Return
+jumpifmovescriptequals MOVESCR_Mist @Return
+jumpifmovescriptequals MOVESCR_FocusEnergy @Return
+jumpifmovescriptequals MOVESCR_1/4Recoil @Return
+jumpifmovescriptequals 0x31 @AI_ConfuseTarget
+jumpifmovescriptequals 0x32 @AI_UserAtk //+2
+jumpifmovescriptequals 0x33 @AI_UserDef //+2
+jumpifmovescriptequals 0x34 @AI_UserSpd //+2
+jumpifmovescriptequals 0x35 @AI_UserSpAtk //+2
+jumpifmovescriptequals 0x36 @AI_UserSpDef //+2
+jumpifmovescriptequals 0x37 @AI_UserAcc //+2
+jumpifmovescriptequals 0x38 @AI_UserEvsn //+2
+jumpifmovescriptequals MOVESCR_Transform @Return
+jumpifmovescriptequals 0x3A @AI_TargetAtk //-2
+jumpifmovescriptequals 0x3B @AI_TargetDef //-2
+jumpifmovescriptequals 0x3C @AI_TargetSpd //-2
+jumpifmovescriptequals 0x3D @AI_TargetSpAtk //-2
+jumpifmovescriptequals 0x3E @AI_TargetSpDef //-2
+jumpifmovescriptequals 0x3F @AI_TargetAcc //-2
+jumpifmovescriptequals 0x40 @AI_TargetEvsn //-2
+jumpifmovescriptequals 0x41 @AI_Reflect
+jumpifmovescriptequals 0x42 @AI_SetPoison
+jumpifmovescriptequals 0x43 @AI_Paralyze
+jumpifmovescriptequals MOVESCR_AuroraBeam @Return
+jumpifmovescriptequals MOVESCR_IronTail_RockSmash @Return
+jumpifmovescriptequals 0x46 @AI_DamageAndLowerSpeed
+jumpifmovescriptequals MOVESCR_MistBall @Return
+jumpifmovescriptequals MOVESCR_Psychic_Crunch @Return
+jumpifmovescriptequals MOVESCR_Mud_Zooka @Return
+jumpifmovescriptequals 0x4B @AI_Razorwind //SkyAttack
+jumpifmovescriptequals MOVESCR_DamageAndConfuse @Return
+jumpifmovescriptequals MOVESCR_TwinNeedle @Return
+jumpifmovescriptequals 0x4E @AI_VitalThrow
+jumpifmovescriptequals 0x4F @AI_Substitute
+jumpifmovescriptequals 0x50 @AI_ImmobileNextTurn
+jumpifmovescriptequals MOVESCR_Rage @Return
+jumpifmovescriptequals MOVESCR_Mimic @Return
+jumpifmovescriptequals MOVESCR_Metronome @Return
+jumpifmovescriptequals 0x54 @AI_LeechSeed
+jumpifmovescriptequals 0x56 @AI_Disable
+jumpifmovescriptequals MOVESCR_Seismictoss_NightShade @Return
+jumpifmovescriptequals MOVESCR_Psywave @Return
+jumpifmovescriptequals 0x59 @AI_Counter
+jumpifmovescriptequals 0x5A @AI_Encore
+jumpifmovescriptequals 0x5B @AI_PainSplit
+jumpifmovescriptequals 0x5C @AI_Snore
+jumpifmovescriptequals MOVESCR_Conversion2 @Return
+jumpifmovescriptequals 0x5E @AI_MindReader
+jumpifmovescriptequals 0x5F @Return
+jumpifmovescriptequals 0x61 @AI_SleepTalk
+jumpifmovescriptequals 0x62 @AI_DestinyBond
+jumpifmovescriptequals 0x63 @AI_Reversal
+jumpifmovescriptequals MOVESCR_Spite @Return
+jumpifmovescriptequals MOVESCR_FalseSwipe @Return
+jumpifmovescriptequals 0x66 @AI_Aromatherapy
+jumpifmovescriptequals MOVESCR_QuickAttack @Return
+jumpifmovescriptequals MOVESCR_TripleKick @Return
+jumpifmovescriptequals 0x69 @AI_Thief/Covet
+jumpifmovescriptequals 0x6A @AI_TrapAndDamage
+jumpifmovescriptequals MOVESCR_Nightmare @Return
+jumpifmovescriptequals 0x6C @AI_UserEvsn //Minimize
+jumpifmovescriptequals 0x6D @AI_Curse
+jumpifmovescriptequals 0x6F @AI_Protect
+jumpifmovescriptequals MOVESCR_EntryHazards @Return
+jumpifmovescriptequals 0x71 @AI_OdorSlueth
+jumpifmovescriptequals MOVESCR_PerishSong @Return
+jumpifmovescriptequals MOVESCR_Sandstorm @Return
+jumpifmovescriptequals 0x74 @AI_Endure
+jumpifmovescriptequals MOVESCR_Rollout_IceBall @Return
+jumpifmovescriptequals MOVESCR_Swagger @Return
+jumpifmovescriptequals MOVESCR_FuryCutter @Return
+jumpifmovescriptequals MOVESCR_Attract @Return
+jumpifmovescriptequals MOVESCR_Return @Return
+jumpifmovescriptequals MOVESCR_Present @Return
+jumpifmovescriptequals MOVESCR_Frustration @Return
+jumpifmovescriptequals MOVESCR_Safeguard @Return
+jumpifmovescriptequals MOVESCR_SacredFire_FlameWheel @Return
+jumpifmovescriptequals MOVESCR_Magnitude @Return
+jumpifmovescriptequals 0x7F @AI_BatonPass
+jumpifmovescriptequals 0x80 @AI_Pursuit
+jumpifmovescriptequals MOVESCR_RapidSpin @Return
+jumpifmovescriptequals MOVESCR_SonicBoom @Return
+jumpifmovescriptequals 0x84 @AI_MorningSun
+jumpifmovescriptequals 0x85 @AI_MorningSun //Synthesis
+jumpifmovescriptequals 0x86 @AI_MorningSun //Moonlight
+jumpifmovescriptequals MOVESCR_Hiddenpower @Return
+jumpifmovescriptequals 0x88 @AI_RainDance
+jumpifmovescriptequals 0x89 @AI_SunnyDay
+jumpifmovescriptequals MOVESCR_SteelWing @Return
+jumpifmovescriptequals MOVESCR_MetalClaw @Return
+jumpifmovescriptequals MOVESCR_SilverWind_Ancientpower @Return
+jumpifmovescriptequals 0x8E @AI_BellyDrum
+jumpifmovescriptequals 0x8F @AI_PsychUp
+jumpifmovescriptequals 0x90 @AI_MirrorCoat
+jumpifmovescriptequals 0x91 @AI_Razorwind //Skullbash
+jumpifmovescriptequals MOVESCR_Twister @Return
+jumpifmovescriptequals MOVESCR_Earthquake @Return
+jumpifmovescriptequals MOVESCR_FutureSight_DoomDesire @Return
+jumpifmovescriptequals MOVESCR_Gust @Return
+jumpifmovescriptequals MOVESCR_Astonish_Stomp @Return
+jumpifmovescriptequals 0x97 @AI_Razorwind //Solarbeam
+jumpifmovescriptequals MOVESCR_Thunder @Return
+jumpifmovescriptequals MOVESCR_Teleport @Return
+jumpifmovescriptequals MOVESCR_BeatUp @Return
+jumpifmovescriptequals 0x9B @AI_Dig/Bounce/Fly
+jumpifmovescriptequals MOVESCR_DefenseCurl @Return
+jumpifmovescriptequals 0x9D @AI_Recover //Softboiled MilkDrink
+jumpifmovescriptequals 0x9E @AI_FakeOut
+jumpifmovescriptequals MOVESCR_Uproar @Return
+jumpifmovescriptequals MOVESCR_Stockpile @Return
+jumpifmovescriptequals 0xA1 @AI_SpitUp
+jumpifmovescriptequals 0xA2 @AI_Recover //Swallow
+jumpifmovescriptequals 0xA4 @AI_Hail
+jumpifmovescriptequals MOVESCR_Torment @Return
+jumpifmovescriptequals 0xA6 @AI_Flatter
+jumpifmovescriptequals MOVESCR_WillOWisp @Return
+jumpifmovescriptequals 0xA8 @AI_UserFaints //Memento
+jumpifmovescriptequals 0xA9 @AI_Facade
+jumpifmovescriptequals 0xAA @AI_FocusPunch
+jumpifmovescriptequals 0xAB @AI_SmellingSalt
+jumpifmovescriptequals MOVESCR_FollowMe @Return
+jumpifmovescriptequals MOVESCR_NaturePower @Return
+jumpifmovescriptequals MOVESCR_Charge @Return
+jumpifmovescriptequals MOVESCR_Taunt @Return
+jumpifmovescriptequals MOVESCR_HelpingHand @Return
+jumpifmovescriptequals 0xB1 @AI_Trick
+jumpifmovescriptequals 0xB2 @AI_RolePlay
+jumpifmovescriptequals MOVESCR_Wish @Return
+jumpifmovescriptequals MOVESCR_Assist @Return
+jumpifmovescriptequals MOVESCR_Ingrain @Return
+jumpifmovescriptequals 0xB6 @AI_SuperPower
+jumpifmovescriptequals 0xB7 @AI_MagicCoat
+jumpifmovescriptequals 0xB8 @AI_Recycle
+jumpifmovescriptequals 0xB9 @AI_Revenge
+jumpifmovescriptequals 0xBA @AI_BrickBreak
+jumpifmovescriptequals MOVESCR_SetYawn @Return
+jumpifmovescriptequals 0xBC @AI_ItemManipulation
+jumpifmovescriptequals 0xBD @AI_Endeavor
+jumpifmovescriptequals 0xBE @AI_WaterSpout
+jumpifmovescriptequals 0xBF @AI_RolePlay //Skill Swap
+jumpifmovescriptequals 0xC0 @AI_Imprison
+jumpifmovescriptequals 0xC1 @AI_Refresh
+jumpifmovescriptequals MOVESCR_Grudge @Return
+jumpifmovescriptequals 0xC3 @AI_Snatch
+jumpifmovescriptequals MOVESCR_LowKick @Return
+jumpifmovescriptequals MOVESCR_SecertPower @Return
+jumpifmovescriptequals MOVESCR_1/3Recoil @Return
+jumpifmovescriptequals MOVESCR_Teeterdance @Return
+jumpifmovescriptequals 0xC8 @AI_HighCrit //Blaze kick
+jumpifmovescriptequals 0xC9 @AI_MudSport
+jumpifmovescriptequals MOVESCR_PoisonFang @Return
+jumpifmovescriptequals MOVESCR_WeatherBall @Return
+jumpifmovescriptequals 0xCC @AI_OverHeat_PsychoBoost
+jumpifmovescriptequals 0xCD @AI_TargetDef //tickle
+jumpifmovescriptequals 0xCE @AI_UserSpDef //cosmicpower
+jumpifmovescriptequals MOVESCR_SkyUpperCut @Return
+jumpifmovescriptequals 0xD0 @AI_UserDef //bulkup
+jumpifmovescriptequals 0xD1 @AI_HighCrit //poisontail
+jumpifmovescriptequals 0xD2 @AI_WaterSport
+jumpifmovescriptequals 0xD3 @AI_UserSpDef //CalmMind
+jumpifmovescriptequals 0xD4 @AI_DragonDance
+jumpifmovescriptequals MOVESCR_Camouflage @Return
+
+returntobattle
+
+//@@@@@@@@@@@@@@@@@@@@@@@@@
+
+#org @AI_SetSleep
+jumpifmovescriptinmoveset BANK_TARGET 0x8 @AI_SetSleep2
+jumpifmovescriptinmoveset BANK_TARGET 0x6B @AI_SetSleep2
+jump @Return
+
+#org @AI_SetSleep2
+randomjumpiflessthan 0x80 @Return
+addtoviabilityscore 0x1
+
+#org @AI_AbosorbHalfDamage
+jumpifdamagebonusequals 0x14 @AI_AbosorbHalfDamage2
+jumpifdamagebonusequals 0xA @AI_AbosorbHalfDamage2
+jump @Return
+
+#org @AI_AbosorbHalfDamage2
+randomjumpiflessthan 0x32 @Return
+addtoviabilityscore 0xFD
+
+#org @AI_UserFaints
+jumpifstatbufflessthan 0x0 0x7 0x7 @AI_1DA76C
+addtoviabilityscore 0xFF
+jumpifstatbufflessthan 0x0 0x7 0xA @AI_1DA76C
+randomjumpiflessthan 0x80 @AI_1DA76C
+addtoviabilityscore 0xFF
+
+#org @AI_1DA76C
+jumpifhealthlessthan BANK_USER 0x50 @AI_1DA784
+jumpifmovewouldhitfirst 0x1 @AI_1DA784
+
+#org @AI_1DA784
+jumpifhealthmorethan BANK_USER 0x32 @AI_1DA7A7
+randomjumpiflessthan 0x80 @AI_1DA793
+addtoviabilityscore 0x1
+
+#org @AI_1DA793
+jumpifhealthmorethan BANK_USER 0x1E @Return
+randomjumpiflessthan 0x32 @Return
+addtoviabilityscore 0x1
+jump @Return
+
+#org @AI_1DA7A7
+randomjumpiflessthan 0x32 @Return
+addtoviabilityscore 0xFF
+
+#org @AI_AbsorbHalfDamageSleep
+jumpifdamagebonusequals 0xA @AI_Minus1
+jumpifdamagebonusequals 0x14 @AI_Minus1
+jump @Return
+
+#org @AI_MirrorMove
+jumpifmovewouldhitfirst 0x1 @AI_1DA7E2
+
+#org @AI_1DA7E2
+getmovelastused BANK_TARGET
+jumpifhalfwordinlist 0x81DA7F8 @Return
+randomjumpiflessthan 0x50 @Return
+addtoviabilityscore 0xFF
+
+#org @AI_UserAtk
+jumpifstatbufflessthan 0x1 0x1 0x9 @AI_1DA85D
+randomjumpiflessthan 0x64 @AI_1DA86C
+addtoviabilityscore 0xFF
+jump @AI_1DA86C
+
+#org @AI_1DA85D
+jumpifhealthnotequal 0x1 0x64 @AI_1DA86C
+randomjumpiflessthan 0x80 @AI_1DA86C
+addtoviabilityscore 0x2
+
+#org @AI_1DA86C
+jumpifhealthmorethan BANK_USER 0x46 @Return
+jumpifhealthlessthan BANK_USER 0x28 @AI_Minus2
+randomjumpiflessthan 0x28 @Return
+
+#org @AI_UserDef
+jumpifstatbufflessthan 0x1 0x2 0x9 @AI_1DA898
+randomjumpiflessthan 0x64 @AI_1DA8A7
+addtoviabilityscore 0xFF
+jump @AI_1DA8A7
+
+#org @AI_1DA898
+jumpifhealthnotequal 0x1 0x64 @AI_1DA8A7
+randomjumpiflessthan 0x80 @AI_1DA8A7
+addtoviabilityscore 0x2
+
+#org @AI_1DA8A7
+jumpifhealthlessthan BANK_USER 0x46 @AI_1DA8B4
+randomjumpiflessthan 0xC8 @Return
+
+#org @AI_1DA8B4
+jumpifhealthlessthan BANK_USER 0x28 @AI_Minus2
+getmovelastused BANK_TARGET
+getbasepower
+jumpifbyteequals 0x0 @AI_1DA8D6
+getmovelastused BANK_TARGET
+getkindofmove
+jumpifbytenotinlist 0x81DA8DF @AI_Minus2
+randomjumpiflessthan 0x3C @Return
+
+#org @AI_1DA8D6
+randomjumpiflessthan 0x3C @Return
+
+#org @AI_UserSpd
+jumpifmovewouldhitfirst 0x1 @AI_1DA8F6
+
+#org @AI_1DA8F6
+randomjumpiflessthan 0x46 @Return
+addtoviabilityscore 0x3
+
+#org @AI_UserSpAtk
+jumpifstatbufflessthan 0x1 0x4 0x9 @AI_1DA914
+randomjumpiflessthan 0x64 @AI_1DA923
+addtoviabilityscore 0xFF
+jump @AI_1DA923
+
+#org @AI_1DA914
+jumpifhealthnotequal 0x1 0x64 @AI_1DA923
+randomjumpiflessthan 0x80 @AI_1DA923
+addtoviabilityscore 0x2
+
+#org @AI_1DA923
+jumpifhealthmorethan BANK_USER 0x46 @Return
+jumpifhealthlessthan BANK_USER 0x28 @AI_Minus2
+randomjumpiflessthan 0x46 @Return
+
+#org @AI_UserSpDef
+jumpifstatbufflessthan 0x1 0x5 0x9 @AI_1DA94F
+randomjumpiflessthan 0x64 @AI_1DA95E
+addtoviabilityscore 0xFF
+jump @AI_1DA95E
+
+#org @AI_1DA94F
+jumpifhealthnotequal 0x1 0x64 @AI_1DA95E
+randomjumpiflessthan 0x80 @AI_1DA95E
+addtoviabilityscore 0x2
+
+#org @AI_1DA95E
+jumpifhealthlessthan BANK_USER 0x46 @AI_1DA96B
+randomjumpiflessthan 0xC8 @Return
+
+#org @AI_1DA96B
+jumpifhealthlessthan BANK_USER 0x28 @AI_Minus2
+getmovelastused BANK_TARGET
+getbasepower
+jumpifbyteequals 0x0 @AI_1DA98D
+getmovelastused BANK_TARGET
+getkindofmove
+jumpifbyteinlist 0x81DA996 @AI_Minus2
+randomjumpiflessthan 0x3C @Return
+
+#org @AI_1DA98D
+randomjumpiflessthan 0x3C @Return
+
+#org @AI_UserAcc
+jumpifstatbufflessthan 0x1 0x6 0x9 @AI_1DA9B0
+randomjumpiflessthan 0x32 @AI_1DA9B0
+addtoviabilityscore 0xFE
+
+#org @AI_1DA9B0
+jumpifhealthmorethan BANK_USER 0x46 @Return
+addtoviabilityscore 0xFE
+
+#org @AI_UserEvsn
+jumpifhealthlessthan BANK_USER 0x5A @AI_1DA9C9
+randomjumpiflessthan 0x64 @AI_1DA9C9
+addtoviabilityscore 0x3
+
+#org @AI_1DA9C9
+jumpifstatbufflessthan 0x1 0x7 0x9 @AI_1DA9D9
+randomjumpiflessthan 0x80 @AI_1DA9D9
+addtoviabilityscore 0xFF
+
+#org @AI_1DA9D9
+jumpifstatus1notequal 0x0 0x80 @AI_1DA9F8
+jumpifhealthmorethan BANK_USER 0x32 @AI_1DA9F0
+randomjumpiflessthan 0x50 @AI_1DA9F8
+
+#org @AI_1DA9F0
+randomjumpiflessthan 0x32 @AI_1DA9F8
+addtoviabilityscore 0x3
+
+#org @AI_1DA9F8
+jumpifstatus3notequal 0x0 0x4 @AI_1DAA0A
+randomjumpiflessthan 0x46 @AI_1DAA0A
+addtoviabilityscore 0x3
+
+#org @AI_1DAA0A
+jumpifstatus3notequal 0x1 0x400 @AI_1DAA1C
+randomjumpiflessthan 0x80 @AI_1DAA1C
+addtoviabilityscore 0x2
+
+#org @AI_1DAA1C
+jumpifstatus2notequal 0x0 0x10000000 @AI_1DAA2E
+randomjumpiflessthan 0x46 @AI_1DAA2E
+addtoviabilityscore 0x3
+
+#org @AI_1DAA2E
+jumpifhealthmorethan BANK_USER 0x46 @Return
+jumpifstatbuffequals 0x1 0x7 0x6 @Return
+jumpifhealthlessthan BANK_USER 0x28 @AI_Minus2
+jumpifhealthlessthan BANK_TARGET 0x28 @AI_Minus2
+randomjumpiflessthan 0x46 @Return
+
+#org @AI_NeverMisses
+jumpifstatbuffmorethan 0x0 0x7 0xA @AI_1DAA79
+jumpifstatbufflessthan 0x1 0x6 0x2 @AI_1DAA79
+jumpifstatbuffmorethan 0x0 0x7 0x8 @AI_1DAA7B
+jumpifstatbufflessthan 0x1 0x6 0x4 @AI_1DAA7B
+jump @Return
+
+#org @AI_1DAA79
+addtoviabilityscore 0x1
+randomjumpiflessthan 0x64 @Return
+addtoviabilityscore 0x1
+
+#org @AI_1DAA7B
+randomjumpiflessthan 0x64 @Return
+addtoviabilityscore 0x1
+
+#org @AI_TargetAtk
+jumpifstatbuffequals 0x0 0x1 0x6 @AI_TargetAtk3
+addtoviabilityscore 0xFF
+jumpifhealthmorethan BANK_USER 0x5A @AI_TargetAtk2
+addtoviabilityscore 0xFF
+
+#org @AI_TargetAtk2
+jumpifstatbuffmorethan 0x0 0x1 0x3 @AI_TargetAtk3
+randomjumpiflessthan 0x32 @AI_TargetAtk3
+addtoviabilityscore 0xFE
+
+#org @AI_TargetAtk3
+jumpifhealthmorethan BANK_TARGET 0x46 @AI_TargetAtk4
+addtoviabilityscore 0xFE
+
+#org @AI_TargetAtk4
+gettype 0x0
+jumpifbyteinlist 0x81DAACF @Return
+gettype 0x2
+jumpifbyteinlist 0x81DAACF @Return
+randomjumpiflessthan 0x32 @Return
+addtoviabilityscore 0xFE
+
+#org @AI_TargetDef
+jumpifhealthlessthan BANK_USER 0x46 @AI_1DAAE5
+jumpifstatbuffmorethan 0x0 0x2 0x3 @AI_1DAAED
+
+#org @AI_1DAAE5
+randomjumpiflessthan 0x32 @AI_1DAAED
+addtoviabilityscore 0xFE
+
+#org @AI_1DAAED
+jumpifhealthmorethan BANK_TARGET 0x46 @Return
+addtoviabilityscore 0xFE
+
+#org @AI_TargetSpd
+jumpifmovewouldhitfirst 0x1 @AI_1DAB1A
+
+#org @AI_1DAB1A
+randomjumpiflessthan 0x46 @Return
+addtoviabilityscore 0x2
+
+#org @AI_TargetSpAtk
+jumpifstatbuffequals 0x0 0x1 0x6 @AI_1DAB46
+addtoviabilityscore 0xFF
+jumpifhealthmorethan BANK_USER 0x5A @AI_1DAB36
+addtoviabilityscore 0xFF
+
+#org @AI_1DAB36
+jumpifstatbuffmorethan 0x0 0x4 0x3 @AI_1DAB46
+randomjumpiflessthan 0x32 @AI_1DAB46
+addtoviabilityscore 0xFE
+
+#org @AI_1DAB46
+jumpifhealthmorethan BANK_TARGET 0x46 @AI_1DAB4F
+addtoviabilityscore 0xFE
+
+#org @AI_1DAB4F
+gettype 0x8
+jumpifbyteinlist 0x81DAB6E @Return
+gettype 0x8
+jumpifbyteinlist 0x81DAB6E @Return
+randomjumpiflessthan 0x32 @Return
+addtoviabilityscore 0xFE
+
+#org @AI_TargetSpDef
+jumpifhealthlessthan BANK_USER 0x46 @AI_1DAB86
+jumpifstatbuffmorethan 0x0 0x5 0x3 @AI_1DAB8E
+
+#org @AI_1DAB86
+randomjumpiflessthan 0x32 @AI_1DAB8E
+addtoviabilityscore 0xFE
+
+#org @AI_1DAB8E
+jumpifhealthmorethan BANK_TARGET 0x46 @Return
+addtoviabilityscore 0xFE
+
+#org @AI_TargetAcc
+jumpifhealthlessthan BANK_USER 0x46 @AI_1DABA6
+jumpifhealthmorethan BANK_TARGET 0x46 @AI_1DABAE
+
+#org @AI_1DABA6
+randomjumpiflessthan 0x64 @AI_1DABAE
+addtoviabilityscore 0xFF
+
+#org @AI_1DABAE
+jumpifstatbuffmorethan 0x1 0x6 0x4 @AI_1DABBE
+randomjumpiflessthan 0x50 @AI_1DABBE
+addtoviabilityscore 0xFE
+
+#org @AI_1DABBE
+jumpifstatus1notequal 0x0 0x80 @AI_1DABD0
+randomjumpiflessthan 0x46 @AI_1DABD0
+addtoviabilityscore 0x2
+
+#org @AI_1DABD0
+jumpifstatus3notequal 0x0 0x4 @AI_1DABE2
+randomjumpiflessthan 0x46 @AI_1DABE2
+addtoviabilityscore 0x2
+
+#org @AI_1DABE2
+jumpifstatus3notequal 0x1 0x400 @AI_1DABF4
+randomjumpiflessthan 0x80 @AI_1DABF4
+addtoviabilityscore 0x1
+
+#org @AI_1DABF4
+jumpifstatus2notequal 0x0 0x10000000 @AI_1DAC06
+randomjumpiflessthan 0x46 @AI_1DAC06
+addtoviabilityscore 0x2
+
+#org @AI_1DAC06
+jumpifhealthmorethan BANK_USER 0x46 @Return
+jumpifstatbuffequals 0x0 0x6 0x6 @Return
+jumpifhealthlessthan BANK_USER 0x28 @AI_Minus2
+jumpifhealthlessthan BANK_TARGET 0x28 @AI_Minus2
+randomjumpiflessthan 0x46 @Return
+
+#org @AI_TargetEvsn
+jumpifhealthlessthan BANK_USER 0x46 @AI_1DAC3B
+jumpifstatbuffmorethan 0x0 0x7 0x3 @AI_1DAC43
+
+#org @AI_1DAC3B
+randomjumpiflessthan 0x32 @AI_1DAC43
+addtoviabilityscore 0xFE
+
+#org @AI_1DAC43
+jumpifhealthmorethan BANK_TARGET 0x46 @Return
+addtoviabilityscore 0xFE
+
+#org @AI_Haze
+jumpifstatbuffmorethan 0x1 0x1 0x8 @AI_1DACA2
+jumpifstatbuffmorethan 0x1 0x2 0x8 @AI_1DACA2
+jumpifstatbuffmorethan 0x1 0x4 0x8 @AI_1DACA2
+jumpifstatbuffmorethan 0x1 0x5 0x8 @AI_1DACA2
+jumpifstatbuffmorethan 0x1 0x7 0x8 @AI_1DACA2
+jumpifstatbufflessthan 0x0 0x1 0x4 @AI_1DACA2
+jumpifstatbufflessthan 0x0 0x2 0x4 @AI_1DACA2
+jumpifstatbufflessthan 0x0 0x4 0x4 @AI_1DACA2
+jumpifstatbufflessthan 0x0 0x5 0x4 @AI_1DACA2
+jumpifstatbufflessthan 0x0 0x6 0x4 @AI_1DACA2
+jump @AI_1DACAA
+
+#org @AI_1DACA2
+randomjumpiflessthan 0x32 @AI_1DACAA
+addtoviabilityscore 0xFD
+
+#org @AI_1DACAA
+jumpifstatbuffmorethan 0x0 0x1 0x8 @AI_1DAD07
+jumpifstatbuffmorethan 0x0 0x2 0x8 @AI_1DAD07
+jumpifstatbuffmorethan 0x0 0x4 0x8 @AI_1DAD07
+jumpifstatbuffmorethan 0x0 0x5 0x8 @AI_1DAD07
+jumpifstatbuffmorethan 0x0 0x7 0x8 @AI_1DAD07
+jumpifstatbufflessthan 0x1 0x1 0x4 @AI_1DAD07
+jumpifstatbufflessthan 0x1 0x2 0x4 @AI_1DAD07
+jumpifstatbufflessthan 0x1 0x4 0x4 @AI_1DAD07
+jumpifstatbufflessthan 0x1 0x5 0x4 @AI_1DAD07
+jumpifstatbufflessthan 0x1 0x6 0x4 @AI_1DAD07
+randomjumpiflessthan 0x32 @Return
+addtoviabilityscore 0xFF
+jump @Return
+
+#org @AI_1DAD07
+randomjumpiflessthan 0x32 @Return
+addtoviabilityscore 0x3
+
+#org @AI_Bide
+jumpifhealthmorethan BANK_USER 0x5A @Return
+addtoviabilityscore 0xFE
+
+#org @AI_Roar
+jumpifstatbuffmorethan 0x0 0x1 0x8 @AI_Roar2
+jumpifstatbuffmorethan 0x0 0x2 0x8 @AI_Roar2
+jumpifstatbuffmorethan 0x0 0x4 0x8 @AI_Roar2
+jumpifstatbuffmorethan 0x0 0x5 0x8 @AI_Roar2
+jumpifstatbuffmorethan 0x0 0x7 0x8 @AI_Roar2
+addtoviabilityscore 0xFD
+jump @Return
+
+#org @AI_Roar2
+randomjumpiflessthan 0x80 @Return
+addtoviabilityscore 0x2
+
+#org @AI_Conversion
+jumpifhealthmorethan BANK_USER 0x5A @AI_1DAD5B
+addtoviabilityscore 0xFE
+
+#org @AI_1DAD5B
+getbattleturncounter
+jumpifbyteequals 0x0 @Return
+randomjumpiflessthan 0xC8 @AI_Minus2
+
+#org @AI_Recover
+jumpifhealthequals 0x1 0x64 @Return
+jumpifmovewouldhitfirst 0x1 @Return
+
+#org @AI_LeechSeed
+jumpifnodamagingmoveinmoveset @AI_1DADFF
+jumpifhealthmorethan BANK_USER 0x32 @AI_1DADF0
+randomjumpiflessthan 0x32 @AI_1DADF0
+addtoviabilityscore 0xFD
+
+#org @AI_1DADF0
+jumpifhealthmorethan BANK_TARGET 0x32 @AI_1DADFF
+randomjumpiflessthan 0x32 @AI_1DADFF
+addtoviabilityscore 0xFD
+
+#org @AI_1DADFF
+jumpifmovescriptinmoveset BANK_USER MOVESCR_UserSpd+1 @AI_1DAE12
+jumpifmovescriptinmoveset BANK_USER MOVESCR_Protect @AI_1DAE12
+jump @Return
+
+#org @AI_1DAE12
+randomjumpiflessthan 0x3C @Return
+addtoviabilityscore 0x2
+
+#org @AI_LightScreen
+jumpifhealthlessthan BANK_USER 0x32 @AI_Minus2
+gettype 0x0
+jumpifbyteinlist 0x81DAE41 @Return
+gettype 0x2
+jumpifbyteinlist 0x81DAE41 @Return
+randomjumpiflessthan 0x32 @Return
+
+#org @AI_Rest
+jumpifmovewouldhitfirst 0x1 @AI_1DAE79
+
+#org @AI_1DAE79
+jumpifhealthlessthan BANK_USER 0x3C @AI_1DAE94
+jumpifhealthmorethan BANK_USER 0x46 @AI_Minus3
+randomjumpiflessthan 0x32 @AI_1DAE94
+
+#org @AI_1DAE94
+jumpifmovescriptnotinmoveset 0x0 0xC3 @AI_1DAEA1
+randomjumpiflessthan 0x32 @Return
+
+#org @AI_1DAEA1
+randomjumpiflessthan 0xA @Return
+addtoviabilityscore 0x3
+
+#org @AI_OHKO
+returntobattle
+
+#org @AI_Razorwind
+jumpifdamagebonusequals 0xA @AI_Minus2
+jumpifdamagebonusequals 0x14 @AI_Minus2
+jumpifmovescriptinmoveset BANK_TARGET 0x6F @AI_Minus2
+jumpifhealthmorethan BANK_USER 0x26 @Return
+addtoviabilityscore 0xFF
+jump @Return
+
+#org @AI_SuperFang
+jumpifhealthmorethan BANK_TARGET 0x32 @Return
+addtoviabilityscore 0xFF
+
+#org @AI_TrapAndDamage
+jumpifstatus1equals 0x0 0x8000 @AI_1DAEE2
+jumpifstatus2equals BANK_TARGET 0x10000000 @AI_1DAEE2
+jumpifstatus3equals BANK_TARGET 0x20 @AI_1DAEE2
+jumpifstatus2equals BANK_TARGET 0xF0000 @AI_1DAEE2
+jump @Return
+
+#org @AI_1DAEE2
+randomjumpiflessthan 0x80 @Return
+addtoviabilityscore 0x1
+
+#org @AI_HighCrit
+jumpifdamagebonusequals 0xA @Return
+jumpifdamagebonusequals 0x14 @Return
+jumpifdamagebonusequals 0x50 @AI_1DAF09
+jumpifdamagebonusequals 0xA0 @AI_1DAF09
+randomjumpiflessthan 0x80 @Return
+
+#org @AI_1DAF09
+randomjumpiflessthan 0x80 @Return
+addtoviabilityscore 0x1
+
+#org @AI_ConfuseTarget
+jumpifhealthmorethan BANK_TARGET 0x46 @Return
+randomjumpiflessthan 0x80 @AI_1DAF29
+addtoviabilityscore 0xFF
+
+#org @AI_1DAF29
+jumpifhealthmorethan BANK_TARGET 0x32 @Return
+addtoviabilityscore 0xFF
+jumpifhealthmorethan BANK_TARGET 0x1E @Return
+addtoviabilityscore 0xFF
+
+#org @AI_Reflect
+jumpifhealthlessthan BANK_USER 0x32 @AI_Minus2
+gettype 0x0
+jumpifbyteinlist 0x81DAF62 @Return
+gettype 0x2
+jumpifbyteinlist 0x81DAF62 @Return
+randomjumpiflessthan 0x32 @Return
+
+#org @AI_SetPoison
+jumpifhealthlessthan BANK_USER 0x32 @AI_Minus1
+jumpifhealthmorethan BANK_TARGET 0x32 @Return
+
+
+#org @AI_Paralyze
+jumpifmovewouldhitfirst 0x1 @AI_Paralyze2
+
+#org @AI_Paralyze2
+randomjumpiflessthan 0x14 @Return
+addtoviabilityscore 0x3
+
+#org @AI_DamageAndLowerSpeed
+jumpifmoveidequals 0xC4 @AI_TargetSpd
+jumpifmoveidequals 0x13D @AI_TargetSpd
+jumpifmoveidequals 0x155 @AI_TargetSpd
+returntobattle
+
+#org @AI_VitalThrow
+jumpifmovewouldhitfirst 0x1 @Return
+
+#org @AI_Substitute
+jumpifhealthmorethan BANK_USER 0x5A @AI_1DAFEA
+jumpifhealthmorethan BANK_USER 0x46 @AI_1DAFE2
+jumpifhealthmorethan BANK_USER 0x32 @AI_1DAFDA
+randomjumpiflessthan 0x64 @AI_1DAFDA
+addtoviabilityscore 0xFF
+
+#org @AI_1DAFDA
+randomjumpiflessthan 0x64 @AI_1DAFE2
+addtoviabilityscore 0xFF
+
+#org @AI_1DAFE2
+randomjumpiflessthan 0x64 @AI_1DAFEA
+addtoviabilityscore 0xFF
+
+#org @AI_1DAFEA
+jumpifmovewouldhitfirst 0x1 @Return
+
+#org @AI_ImmobileNextTurn
+jumpifdamagebonusequals 0xA @AI_Minus1
+jumpifdamagebonusequals 0x14 @AI_Minus1
+jumpifmovewouldhitfirst 0x1 @AI_1DB071
+
+#org @AI_1DB071
+jumpifhealthlessthan BANK_USER 0x3C @Return
+addtoviabilityscore 0xFF
+
+#org @AI_Disable
+jumpifmovewouldhitfirst 0x1 @Return
+
+#org @AI_Counter
+jumpifstatus1equals BANK_TARGET 0x700 @AI_Minus1
+jumpifstatus2equals BANK_TARGET 0xF0000 @AI_Minus1
+jumpifstatus2equals BANK_TARGET 0x7 @AI_Minus1
+jumpifhealthmorethan BANK_USER 0x1E @AI_1DB0C7
+randomjumpiflessthan 0xA @AI_1DB0C7
+addtoviabilityscore 0xFF
+
+#org @AI_1DB0C7
+jumpifhealthmorethan BANK_USER 0x32 @AI_1DB0D6
+randomjumpiflessthan 0x64 @AI_1DB0D6
+addtoviabilityscore 0xFF
+
+#org @AI_1DB0D6
+getmovelastused BANK_TARGET
+getbasepower
+jumpifbyteequals 0x0 @AI_1DB105
+jumpiftauntturnszero @AI_1DB0EC
+randomjumpiflessthan 0x64 @AI_1DB0EC
+addtoviabilityscore 0x1
+
+#org @AI_1DB0EC
+getmovelastused BANK_TARGET
+getkindofmove
+jumpifbytenotinlist 0x81DB131 @AI_Minus1
+randomjumpiflessthan 0x64 @Return
+addtoviabilityscore 0x1
+jump @Return
+
+#org @AI_1DB105
+jumpiftauntturnszero @AI_1DB112
+randomjumpiflessthan 0x64 @AI_1DB112
+addtoviabilityscore 0x1
+
+#org @AI_1DB112
+gettype 0x0
+jumpifbyteinlist 0x81DB131 @Return
+gettype 0x2
+jumpifbyteinlist 0x81DB131 @Return
+randomjumpiflessthan 0x32 @Return
+addtoviabilityscore 0xFF
+
+#org @AI_Encore
+jumpifmovesetrestricted 0x0 0x0 @AI_1DB154
+jumpifmovewouldhitfirst 0x1 @AI_Minus2
+
+#org @AI_1DB154
+randomjumpiflessthan 0x1E @Return
+addtoviabilityscore 0x3
+jump @Return
+
+#org @AI_PainSplit
+jumpifhealthlessthan BANK_TARGET 0x50 @AI_Minus1
+jumpifmovewouldhitfirst 0x1 @AI_1DB1BE
+
+#org @AI_1DB1BE
+jumpifhealthmorethan BANK_USER 0x3C @AI_Minus1
+addtoviabilityscore 0x1
+jump @Return
+
+#org @AI_Snore
+addtoviabilityscore 0x2
+returntobattle
+
+#org @AI_MindReader
+randomjumpiflessthan 0x80 @Return
+addtoviabilityscore 0x2
+
+#org @AI_SleepTalk
+addtoviabilityscore 0x2
+returntobattle
+
+#org @AI_DestinyBond
+addtoviabilityscore 0xFF
+jumpifmovewouldhitfirst 0x1 @Return
+
+#org @AI_Reversal
+jumpifmovewouldhitfirst 0x1 @AI_1DB234
+
+#org @AI_1DB234
+jumpifhealthmorethan BANK_USER 0x3C @AI_Minus1
+jumpifhealthmorethan BANK_USER 0x28 @Return
+jump @AI_1DB249
+
+#org @AI_1DB249
+randomjumpiflessthan 0x64 @Return
+addtoviabilityscore 0x1
+jump @Return
+
+#org @AI_Aromatherapy
+jumpifstatus1equals 0x8 0xFF00 @Return
+jumpifanypokemonhasstatus 0x0 0xFF @Return
+addtoviabilityscore 0xFB
+
+#org @AI_Thief/Covet
+gethelditemeffect BANK_TARGET
+jumpifbytenotinlist 0x81DB28B @AI_Minus2
+randomjumpiflessthan 0x32 @Return
+addtoviabilityscore 0x1
+jump @Return
+
+#org @AI_Curse
+gettype 0x1
+jumpifbyteequals 0x7 @AI_1DB2D8
+gettype 0x3
+jumpifbyteequals 0x7 @AI_1DB2D8
+jumpifstatbuffmorethan 0x1 0x2 0x9 @Return
+randomjumpiflessthan 0x80 @AI_1DB2B3
+addtoviabilityscore 0x1
+
+#org @AI_1DB2B3
+jumpifstatbuffmorethan 0x1 0x2 0x7 @Return
+randomjumpiflessthan 0x80 @AI_1DB2C3
+addtoviabilityscore 0x1
+
+#org @AI_1DB2C3
+jumpifstatbuffmorethan 0x1 0x2 0x6 @Return
+randomjumpiflessthan 0x80 @Return
+addtoviabilityscore 0x1
+jump @Return
+
+#org @AI_1DB2D8
+jumpifhealthmorethan BANK_USER 0x50 @Return
+addtoviabilityscore 0xFF
+
+#org @AI_Protect
+getprotectactivity 0x1
+jumpifbytemorethan 0x1 @AI_Minus2
+jumpifstatus1equals 0x1 0x8001 @Protect2
+jumpifstatus2equals 0x1 0x10000000 @Protect2
+jumpifstatus3equals 0x1 0x20 @Protect2
+jumpifstatus2equals 0x1 0xF0000 @Protect2
+jumpifstatus3equals 0x1 0x4 @Protect2
+jumpifstatus3equals 0x1 0x1800 @Protect2
+jumpifmovescriptinmoveset BANK_TARGET 0x20 @Protect2
+jumpifmovescriptinmoveset BANK_TARGET 0x9C @Protect2
+jumpifstatus1equals BANK_TARGET 0x8000 @Protect3
+jumpifstatus2equals BANK_TARGET 0x10000000 @Protect3
+jumpifstatus3equals BANK_TARGET 0x20 @Protect3
+jumpifstatus2equals BANK_TARGET 0xF0000 @Protect3
+jumpifstatus3equals BANK_TARGET 0x4 @Protect3
+jumpifstatus3equals BANK_TARGET 0x1800 @Protect3
+getmovelastused BANK_TARGET
+getmoverange
+jumpifbytenotequal 0x5E @Protect3
+jump @Protect4
+
+#org @Protect2
+getmovelastused BANK_TARGET
+getmoverange
+jumpifbytenotequal 0x5E @Return
+addtoviabilityscore 0xFE
+
+#org @Protect3
+addtoviabilityscore 0x2
+getprotectactivity 0x1
+jumpifbyteequals 0x0 @Return
+addtoviabilityscore 0xFF
+randomjumpiflessthan 0x80 @Return
+addtoviabilityscore 0xFF
+jump @Return
+
+#org @Protect4
+getprotectactivity 0x1
+jumpifbyteequals 0x0 @Return
+addtoviabilityscore 0xFF
+randomjumpiflessthan 0x80 @Return
+addtoviabilityscore 0xFF
+jump @Return
+
+#org @AI_OdorSlueth
+gettype 0x1
+jumpifbyteequals 0x7 @AI_1DB3C2
+gettype 0x3
+jumpifbyteequals 0x7 @AI_1DB3C2
+jumpifstatbuffmorethan 0x1 0x7 0x8 @AI_1DB3C8
+addtoviabilityscore 0xFE
+jump @Return
+
+#org @AI_1DB3C2
+randomjumpiflessthan 0x50 @Return
+randomjumpiflessthan 0x50 @Return
+addtoviabilityscore 0x2
+
+#org @AI_1DB3C8
+randomjumpiflessthan 0x50 @Return
+addtoviabilityscore 0x2
+
+#org @AI_Endure
+jumpifhealthlessthan BANK_USER 0x4 @AI_Minus1
+jumpifhealthlessthan BANK_USER 0x23 @AI_1DB3E6
+
+#org @AI_1DB3E6
+randomjumpiflessthan 0x46 @Return
+addtoviabilityscore 0x1
+
+#org @AI_BatonPass
+jumpifstatbuffmorethan 0x1 0x1 0x8 @AI_1DB41C
+jumpifstatbuffmorethan 0x1 0x2 0x8 @AI_1DB41C
+jumpifstatbuffmorethan 0x1 0x4 0x8 @AI_1DB41C
+jumpifstatbuffmorethan 0x1 0x5 0x8 @AI_1DB41C
+jumpifstatbuffmorethan 0x1 0x7 0x8 @AI_1DB41C
+jump @AI_1DB442
+
+#org @AI_1DB41C
+jumpifmovewouldhitfirst 0x1 @AI_1DB42E
+
+#org @AI_1DB42E
+jumpifhealthmorethan BANK_USER 0x46 @Return
+randomjumpiflessthan 0x50 @Return
+addtoviabilityscore 0x2
+jump @Return
+
+#org @AI_1DB442
+jumpifstatbuffmorethan 0x1 0x1 0x7 @AI_1DB46F
+jumpifstatbuffmorethan 0x1 0x2 0x7 @AI_1DB46F
+jumpifstatbuffmorethan 0x1 0x4 0x7 @AI_1DB46F
+jumpifstatbuffmorethan 0x1 0x5 0x7 @AI_1DB46F
+jumpifstatbuffmorethan 0x1 0x7 0x7 @AI_1DB46F
+jump @AI_Minus2
+
+#org @AI_1DB46F
+jumpifmovewouldhitfirst 0x1 @AI_1DB481
+
+#org @AI_1DB481
+jumpifhealthlessthan BANK_USER 0x46 @Return
+addtoviabilityscore 0xFE
+
+
+#org @AI_Pursuit
+checkiffirstturn 0x1
+jumpifbytenotequal 0x0 @Return
+gettype 0x0
+jumpifbyteequals 0x7 @AI_1DB4B8
+gettype 0x0
+jumpifbyteequals 0xE @AI_1DB4B8
+gettype 0x2
+jumpifbyteequals 0x7 @AI_1DB4B8
+gettype 0x2
+jumpifbyteequals 0xE @AI_1DB4B8
+jump @Return
+
+#org @AI_1DB4B8
+randomjumpiflessthan 0x80 @Return
+addtoviabilityscore 0x1
+
+#org @AI_MorningSun
+getweather
+jumpifbyteequals 0x3 @AI_1DAD81
+jumpifbyteequals 0x1 @AI_1DAD81
+jumpifbyteequals 0x2 @AI_1DAD81
+jump @AI_Recover
+
+#org @AI_1DAD81
+addtoviabilityscore 0xFE
+jumpifhealthequals 0x1 0x64 @Return
+jumpifmovewouldhitfirst 0x1 @Return
+
+#org @AI_1DADB2
+jumpifhealthlessthan BANK_USER 0x46 @AI_1DADC6
+randomjumpiflessthan 0x1E @AI_1DADC6
+addtoviabilityscore 0xFD
+jump @Return
+
+#org @AI_1DADC6
+jumpifmovescriptnotinmoveset 0x0 0xC3 @AI_1DADD3
+randomjumpiflessthan 0x64 @Return
+
+#org @AI_1DADD3
+randomjumpiflessthan 0x14 @Return
+addtoviabilityscore 0x2
+
+#org @AI_RainDance
+jumpifmovewouldhitfirst 0x0 @AI_1DB4CF
+
+#org @AI_1DB4CF
+jumpifhealthlessthan BANK_USER 0x28 @AI_Minus1
+getweather
+jumpifbyteequals 0x3 @AI_Plus1
+jumpifbyteequals 0x0 @AI_Plus1
+jumpifbyteequals 0x2 @AI_Plus1
+getability ABILITY_STENCH
+jumpifbyteequals 0x2C @AI_Plus1
+jump @Return
+
+#org @AI_SunnyDay
+jumpifhealthlessthan BANK_USER 0x28 @AI_Minus1
+getweather
+jumpifbyteequals 0x3 @AI_Plus1
+jumpifbyteequals 0x1 @AI_Plus1
+jumpifbyteequals 0x2 @AI_Plus1
+jump @Return
+
+#org @AI_BellyDrum
+jumpifhealthlessthan BANK_USER 0x5A @AI_Minus2
+jump @Return
+
+#org @AI_PsychUp
+jumpifstatbuffmorethan 0x0 0x1 0x8 @AI_1DB565
+jumpifstatbuffmorethan 0x0 0x2 0x8 @AI_1DB565
+jumpifstatbuffmorethan 0x0 0x4 0x8 @AI_1DB565
+jumpifstatbuffmorethan 0x0 0x5 0x8 @AI_1DB565
+jumpifstatbuffmorethan 0x0 0x7 0x8 @AI_1DB565
+jump @AI_Minus2
+
+#org @AI_1DB565
+jumpifstatbufflessthan 0x1 0x1 0x7 @AI_1DB59A
+jumpifstatbufflessthan 0x1 0x2 0x7 @AI_1DB59A
+jumpifstatbufflessthan 0x1 0x4 0x7 @AI_1DB59A
+jumpifstatbufflessthan 0x1 0x5 0x7 @AI_1DB59A
+jumpifstatbufflessthan 0x1 0x7 0x7 @AI_1DB598
+randomjumpiflessthan 0x32 @Return
+jump @AI_Minus2
+
+#org @AI_1DB59A
+randomjumpiflessthan 0x80 @Return
+addtoviabilityscore 0x1
+addtoviabilityscore 0xFE
+
+#org @AI_1DB598
+addtoviabilityscore 0x1
+randomjumpiflessthan 0x80 @Return
+addtoviabilityscore 0x1
+addtoviabilityscore 0xFE
+
+#org @AI_MirrorCoat
+jumpifstatus1equals BANK_TARGET 0x700 @AI_Minus1
+jumpifstatus2equals BANK_TARGET 0xF0000 @AI_Minus1
+jumpifstatus2equals BANK_TARGET 0x7 @AI_Minus1
+jumpifhealthmorethan BANK_USER 0x1E @AI_1DB5D2
+randomjumpiflessthan 0xA @AI_1DB5D2
+addtoviabilityscore 0xFF
+
+#org @AI_1DB5D2
+jumpifhealthmorethan BANK_USER 0x32 @AI_1DB5E1
+randomjumpiflessthan 0x64 @AI_1DB5E1
+addtoviabilityscore 0xFF
+
+#org @AI_1DB5E1
+getmovelastused BANK_TARGET
+getbasepower
+jumpifbyteequals 0x0 @AI_1DB610
+jumpiftauntturnszero @AI_1DB5F7
+randomjumpiflessthan 0x64 @AI_1DB5F7
+addtoviabilityscore 0x1
+
+#org @AI_1DB5F7
+getmovelastused BANK_TARGET
+getkindofmove
+jumpifbytenotinlist 0x81DB63C @AI_Minus1
+randomjumpiflessthan 0x64 @Return
+addtoviabilityscore 0x1
+jump @Return
+
+#org @AI_1DB610
+jumpiftauntturnszero @AI_1DB61D
+randomjumpiflessthan 0x64 @AI_1DB61D
+addtoviabilityscore 0x1
+
+#org @AI_1DB61D
+gettype 0x0
+jumpifbyteinlist 0x81DB63C @Return
+gettype 0x2
+jumpifbyteinlist 0x81DB63C @Return
+randomjumpiflessthan 0x32 @Return
+addtoviabilityscore 0xFF
+
+#org @AI_Dig/Bounce/Fly
+jumpifmovescriptnotinmoveset 0x0 0x6F @AI_1DB677
+addtoviabilityscore 0xFF
+jump @Return
+
+#org @AI_1DB677
+jumpifstatus1equals 0x1 0x8001 @AI_1DB6E6
+jumpifstatus2equals BANK_TARGET 0x10000000 @AI_1DB6E6
+jumpifstatus3equals BANK_TARGET 0x4 @AI_1DB6E6
+getweather
+jumpifbyteequals 0x3 @AI_1DB6A7
+jumpifbyteequals 0x2 @AI_1DB6C2
+jump @AI_1DB6D2
+
+#org @AI_1DB6A7
+gettype 0x1
+jumpifbyteinlist 0x81DB6EF @AI_1DB6E6
+gettype 0x3
+jumpifbyteinlist 0x81DB6EF @AI_1DB6E6
+jump @AI_1DB6D2
+
+#org @AI_1DB6D2
+jumpifmovewouldhitfirst 0x1 @Return
+
+#org @AI_1DB6C2
+gettype 0x1
+jumpifbyteequals 0xF @AI_1DB6E6
+gettype 0x3
+jumpifbyteequals 0xF @AI_1DB6E6
+jumpifmovewouldhitfirst 0x1 @Return
+
+#org @AI_1DB6E6
+randomjumpiflessthan 0x50 @Return
+addtoviabilityscore 0x1
+
+#org @AI_FakeOut
+addtoviabilityscore 0x2
+returntobattle
+
+#org @AI_SpitUp
+getstockpilecounter 0x1
+jumpifbytelessthan 0x2 @Return
+randomjumpiflessthan 0x50 @Return
+addtoviabilityscore 0x2
+
+#org @AI_Hail
+jumpifhealthlessthan BANK_USER 0x28 @AI_Minus1
+getweather
+jumpifbyteequals 0x0 @AI_Plus1
+jumpifbyteequals 0x1 @AI_Plus1
+jumpifbyteequals 0x2 @AI_Plus1
+jump @Return
+
+
+#org @AI_Flatter
+randomjumpiflessthan 0x80 @AI_ConfuseTarget
+addtoviabilityscore 0x1
+
+#org @AI_Facade
+jumpifstatus1notequal 0x0 0xD8 @Return
+addtoviabilityscore 0x1
+
+#org @AI_FocusPunch
+jumpifdamagebonusequals 0xA @AI_Minus1
+jumpifdamagebonusequals 0x14 @AI_Minus1
+jumpifstatus1equals BANK_TARGET 0x700 @AI_Minus1
+jumpifstatus2equals BANK_TARGET 0xF0000 @AI_1DB783
+jumpifstatus2equals BANK_TARGET 0x7 @AI_1DB783
+checkiffirstturn 0x1
+jumpifbytenotequal 0x0 @Return
+randomjumpiflessthan 0x64 @Return
+addtoviabilityscore 0x1
+jump @Return
+
+#org @AI_1DB783
+randomjumpiflessthan 0x64 @Return
+addtoviabilityscore 0x1
+
+#org @AI_SmellingSalt
+jumpifstatus1equals BANK_TARGET 0x4000 @Return
+jump @Return
+
+#org @AI_Trick
+gethelditemeffect 0x1
+jumpifbyteinlist 0x81DB7E7 @AI_1DB7B9
+jumpifbyteinlist 0x81DB7DF @AI_1DB7CB
+addtoviabilityscore 0xFD
+jump @Return
+
+#org @AI_1DB7B9
+gethelditemeffect BANK_TARGET
+jumpifbyteinlist 0x81DB7E7 @AI_Minus3
+addtoviabilityscore 0x5
+jump @Return
+
+#org @AI_1DB7CB
+gethelditemeffect BANK_TARGET
+jumpifbyteinlist 0x81DB7DF @AI_Minus3
+randomjumpiflessthan 0x32 @Return
+addtoviabilityscore 0x2
+
+#org @AI_RolePlay
+getability ABILITY_STENCH
+jumpifbyteinlist 0x81DB80F @AI_1DB7FF
+getability BANK_TARGET
+jumpifbyteinlist 0x81DB80F @AI_1DB806
+
+#org @AI_1DB7FF
+addtoviabilityscore 0xFF
+jump @Return
+
+#org @AI_1DB806
+randomjumpiflessthan 0x32 @Return
+addtoviabilityscore 0x2
+
+#org @AI_SuperPower
+jumpifdamagebonusequals 0xA @AI_Minus1
+jumpifdamagebonusequals 0x14 @AI_Minus1
+jumpifstatbufflessthan 0x1 0x1 0x6 @AI_Minus1
+jumpifmovewouldhitfirst 0x1 @AI_1DB846
+
+#org @AI_1DB846
+jumpifhealthlessthan BANK_USER 0x3C @Return
+addtoviabilityscore 0xFF
+
+#org @AI_MagicCoat
+jumpifhealthmorethan BANK_TARGET 0x1E @AI_1DB85F
+randomjumpiflessthan 0x64 @AI_1DB85F
+addtoviabilityscore 0xFF
+
+#org @AI_1DB85F
+checkiffirstturn 0x1
+jumpifbyteequals 0x0 @AI_1DB87A
+randomjumpiflessthan 0x96 @Return
+addtoviabilityscore 0x1
+jump @Return
+
+#org @AI_1DB87A
+randomjumpiflessthan 0x1E @Return
+addtoviabilityscore 0xFF
+
+#org @AI_Recycle
+getdp08item 0x1
+jumpifbytenotinlist 0x81DB89E @AI_Minus2
+randomjumpiflessthan 0x32 @Return
+addtoviabilityscore 0x1
+jump @Return
+
+
+#org @AI_Revenge
+jumpifstatus1equals BANK_TARGET 0x700 @AI_Minus1
+jumpifstatus2equals BANK_TARGET 0xF0000 @AI_Minus2
+jumpifstatus2equals BANK_TARGET 0x7 @AI_Minus2
+randomjumpiflessthan 0xB4 @AI_Minus2
+addtoviabilityscore 0x2
+jump @Return
+
+#org @AI_BrickBreak
+jumpifstatus4equals 0x0 0x1 @AI_Plus1
+jump @Return
+
+#org @AI_ItemManipulation
+jumpifhealthlessthan BANK_TARGET 0x1E @Return
+checkiffirstturn 0x1
+jumpifbytemorethan 0x0 @Return
+randomjumpiflessthan 0xB4 @Return
+addtoviabilityscore 0x1
+
+#org @AI_Endeavor
+jumpifhealthlessthan BANK_TARGET 0x46 @AI_Minus1
+jumpifmovewouldhitfirst 0x1 @AI_1DB915
+
+#org @AI_1DB915
+jumpifhealthmorethan BANK_USER 0x32 @AI_Minus1
+addtoviabilityscore 0x1
+jump @Return
+
+#org @AI_WaterSpout
+jumpifdamagebonusequals 0xA @AI_Minus1
+jumpifdamagebonusequals 0x14 @AI_Minus1
+jumpifmovewouldhitfirst 0x1 @AI_1DB944
+
+#org @AI_1DB944
+jumpifhealthmorethan BANK_TARGET 0x46 @Return
+addtoviabilityscore 0xFF
+
+#org @AI_Imprison
+checkiffirstturn 0x1
+jumpifbytemorethan 0x0 @Return
+randomjumpiflessthan 0x64 @Return
+addtoviabilityscore 0x2
+
+#org @AI_Refresh
+jumpifhealthlessthan BANK_TARGET 0x32 @AI_Minus1
+jump @Return
+
+#org @AI_Snatch
+checkiffirstturn 0x1
+jumpifbyteequals 0x1 @AI_1DB9B5
+randomjumpiflessthan 0x1E @Return
+jumpifmovewouldhitfirst 0x1 @AI_1DB99B
+
+#org @AI_1DB99B
+jumpifhealthmorethan BANK_TARGET 0x19 @AI_1DB9CF
+jumpifmovescriptinmoveset BANK_TARGET 0x20 @AI_1DB9B5
+jumpifmovescriptinmoveset BANK_TARGET 0x9C @AI_1DB9B5
+jump @AI_1DB9C2
+
+#org @AI_1DB9B5
+randomjumpiflessthan 0x96 @Return
+addtoviabilityscore 0x2
+jump @Return
+
+#org @AI_1DB9C2
+randomjumpiflessthan 0xE6 @AI_1DB9CF
+addtoviabilityscore 0x1
+jump @Return
+
+#org @AI_1DB9CF
+randomjumpiflessthan 0x1E @Return
+addtoviabilityscore 0xFE
+
+#org @AI_MudSport
+jumpifhealthlessthan BANK_USER 0x32 @AI_Minus1
+gettype 0x0
+jumpifbyteequals 0xD @AI_Plus1
+gettype 0x2
+jumpifbyteequals 0xD @AI_Plus1
+jump @AI_Minus1
+
+#org @AI_OverHeat_PsychoBoost
+jumpifdamagebonusequals 0xA @AI_Minus1
+jumpifdamagebonusequals 0x14 @AI_Minus1
+jumpifmovewouldhitfirst 0x1 @AI_1DBA1C
+
+#org @AI_1DBA1C
+jumpifhealthmorethan BANK_USER 0x50 @Return
+addtoviabilityscore 0xFF
+
+#org @AI_WaterSport
+jumpifhealthlessthan BANK_USER 0x32 @AI_Minus1
+gettype 0x0
+jumpifbyteequals 0xA @AI_Plus1
+gettype 0x2
+jumpifbyteequals 0xA @AI_Plus1
+jump @AI_Minus1
+
+#org @AI_DragonDance
+jumpifmovewouldhitfirst 0x1 @AI_DragonDance2
+
+#org @AI_DragonDance2
+randomjumpiflessthan 0x80 @Return
+addtoviabilityscore 0x1
+
+//@@@@@@@@@@@@@
+
+#org @AI_Minus1
+addtoviabilityscore 0xFF
+returntobattle
+
+#org @AI_Minus2
+addtoviabilityscore 0xFE
+returntobattle
+
+
+#org @AI_Minus3
+addtoviabilityscore 0xFD
+jump @Return
+
+
+#org @AI_Plus1
+addtoviabilityscore 0x1
+returntobattle
+
+
+#org @AI_Plus2
+addtoviabilityscore 0x2
+returntobattle
+
+
+#org @AI_Plus3
+addtoviabilityscore 0x3
+returntobattle
+
+
+#org @AI_Plus4
+addtoviabilityscore 0x4
+returntobattle
+
+#org @AI_Plus7
+AddToViabilityScore 0x7
+returntobattle
+
+#org @Return
+returntobattle
