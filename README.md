@@ -1,13 +1,18 @@
 Project Read Me
 
-1. AI_Script_BASE is solely for base moves and abilities ONLY. The AI_EXPANSION is for adding abilities and moves. Please follow the same formats for consitstency. Consitstency will make is easy for the community to add moves without much hassle. I have included a few moves in the expansion file for examples. 
+AI_Script_BASE is solely for base moves and abilities ONLY. The AI_EXPANSION is for adding abilities and moves. Please follow the same formats for consitstency. Consitstency will make is easy for the community to add moves without much hassle. I have included a few moves in the expansion file for examples. 
 
-2. The scripts in "Ai_Scripts" are ready for compiling. They are not game ready but currently have no major errors.
+In the modified scripts, if its "jumpifmovescriptequals HEX ID" this move is already in the base game. If its "jumpifmovescriptequals
+MOVESCR_NAME" this is an added move. If you the movescr has @Return, it has not be fully added. If you see "MOVESCR_NAME @AI_NAME" then it has been added. For example, you will see "jumpifmovescriptequals MOVESCR_MirrorMove @AI_MirrorMove". This move has been added by me or another participant. Please review these to make sure no mistakes were added! 
 
-3. We need to agree on how we rate moves for the viabilty score. Status moves > Damaging? That type of thing.
+The scripts in "Ai_Scripts" are ready for compiling. They are not game ready but currently have no major errors.
 
-4. The modified plus script isnt fully labeled.
+We need to agree on how we rate moves for the viabilty score. Status moves > Damaging? That type of thing.
 
-5. Credits go to skeli for the python compiler.
+The modified plus script isnt fully labeled.
 
-6. Credits to akamethebulbasaur and skeli for rewritten and new ai commands. 
+Credits go to skeli for the python compiler.
+
+Credits to akamethebulbasaur and skeli for rewritten and new ai commands. 
+
+
