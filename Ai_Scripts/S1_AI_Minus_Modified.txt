@@ -1,3 +1,9 @@
+//THINGS THAT NEED TO BE DONE FOR COMPILING
+//Create "DAMAGE_TABLE" that contains all damaging moves - used for mirrormove
+
+
+
+
 #dynamic 0x8bf6f0
 
 #include counters.aisp
@@ -168,7 +174,7 @@ JumpIfFreeVarEquals TYPE_FIRE @AI_Minus12
 jumpifmovescriptequals 0x1 @AI_SetSleep
 jumpifmovescriptequals 0x7 @AI_Explosion
 jumpifmovescriptequals 0x8 @AI_AbsorbHalfDamageSleep
-jumpifmovescriptequals MOVESCR_MirrorMove @Return //no
+jumpifmovescriptequals MOVESCR_MirrorMove @AI_MirroMove
 jumpifmovescriptequals 0xA @AI_UserAtk+1
 jumpifmovescriptequals 0xB @AI_UserDef+1
 jumpifmovescriptequals 0xC @AI_UserSpd+1
@@ -176,7 +182,7 @@ jumpifmovescriptequals 0xD @AI_UserSpAtk+1
 jumpifmovescriptequals 0xE @AI_UserSpDef+1
 jumpifmovescriptequals 0xF @AI_UserAcc+1
 jumpifmovescriptequals 0x10 @AI_UserEvsn+1
-jumpifmovescriptequals MOVESCR_NeverMisses @Return //no
+jumpifmovescriptequals MOVESCR_NeverMisses @AI_NeverMiss
 jumpifmovescriptequals 0x12 @AI_TargetAtk-1
 jumpifmovescriptequals 0x13 @AI_TargetDef-1
 jumpifmovescriptequals 0x14 @AI_TargetSpd-1
@@ -407,6 +413,11 @@ jump @SubstituteCheck
 
 //@@@@
 
+#org @AI_MirroMove
+GetMoveLastUsed
+jumpifhalfwordnotinlist DAMAGE_TABLE @AI_Minus12
+returntobattle
+
 #org @AI_UserAtk+1
 jumpifstatbuffequals 0x1 0x1 0xC @AI_Minus10
 returntobattle
@@ -422,6 +433,12 @@ returntobattle
 #org @AI_UserSpAtk+1
 jumpifstatbuffequals 0x1 0x4 0xC @AI_Minus10
 returntobattle
+
+#org @AI_NeverMiss
+jumpifstatbufflessthan BANK_TARGET 0x3 0x8 @AI_Minus4
+jumpifstatbufflessthan BANK_TARGET 0x7 0x8 @AI_Minus4
+jumpifstatbuffmorethan BANK_USER 0x6 0x4 @AI_Minus4
+Returntobattle
 
 #org @AI_UserSpDef+1
 jumpifstatbuffequals 0x1 0x5 0xC @AI_Minus10
