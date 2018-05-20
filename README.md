@@ -7,3 +7,7 @@ Project Read Me
 3. We need to agree on how we rate moves for the viabilty score. Status moves > Damaging? That type of thing.
 
 4. The modified plus script isnt fully labeled.
+
+5. Credits go to skeli for the python compiler.
+
+6. Credits to akamethebulbasaur and skeli for rewritten and new ai commands. 
