@@ -20,7 +20,7 @@
 
 #org @Start
 GetMoveRange
-JumpIfByteEquals 0x10 @MoveScriptStart
+JumpIfByteEquals 0x10 @ImmunityCheck
 
 #org @PositiveChecks
 JumpIfNoDamagingMoveInMoveset @TimeSaverCheck
@@ -46,7 +46,7 @@ AddToViabilityScore 0x7
 GetAbility BANK_TARGET
 JumpIfByteInList AbilityToCheckForList @AbsorbAbilitiesCheck
 GetAbility BANK_TARGETPARTNER
-JumpIfByteNotInList AbilityToCheckForList @MoveScriptStart
+JumpIfByteNotInList AbilityToCheckForList @ImmunityCheck
 jump @CheckPartnerAbilities
 
 #org @AbsorbAbilitiesCheck
@@ -139,18 +139,18 @@ Jump @AI_Minus10
  #org @CheckPartnerAbilities
 GetAbility BANK_TARGETPARTNER
 JumpIfByteEquals ABILITY_LIGHTNINGROD @DiscourageElectric2
-Jump @MoveScriptStart
+Jump @ImmunityCheck
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #org @HarshSunCheck
 GetPowerofConsideredMove
-JumpIfByteEquals 0x0 @MoveScriptStart
+JumpIfByteEquals 0x0 @ImmunityCheck
 Jump @DiscourageWater2
 
 #org @HeavyRainCheck
 GetPowerofConsideredMove
-JumpIfByteEquals 0x0 @MoveScriptStart
+JumpIfByteEquals 0x0 @ImmunityCheck
 Jump @DiscourageFire2
 
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -158,21 +158,33 @@ Jump @DiscourageFire2
 #org @DiscourageElectric2
 GetType 0x8 //Move Type
 JumpIfFreeVarEquals TYPE_ELECTRIC @AI_Minus12
-Jump @MoveScriptStart
+Jump @ImmunityCheck
 
 #org @DiscourageWater2
 GetType 0x8 //Move Type
 JumpIfFreeVarEquals TYPE_WATER @AI_Minus12
-Jump @MoveScriptStart
+Jump @ImmunityCheck
 
 #org @DiscourageFire2
 GetType 0x8 //Move Type
 JumpIfFreeVarEquals TYPE_FIRE @AI_Minus12
+Jump @ImmunityCheck
 
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+#org @ImmunityCheck
+JumpIfDamageBonusEquals 0x12 IMMUNE @AI_Minus12
+
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #org @MoveScriptStart
 jumpifmovescriptequals 0x1 @AI_SetSleep
-jumpifmovescriptequals 0x7 @AI_Explosion
+jumpifmovescriptequals MOVESCR_Sludge @Return
+jumpifmovescriptequals MOVESCR_DrainHP @AI_DrainHP //Skeli
+jumpifmovescriptequals MOVESCR_SetBurn @Return
+jumpifmovescriptequals MOVESCR_Snow_IceMoves @Return
+jumpifmovescriptequals MOVESCR_ThunderMoves @AI_ThunderMoves //Xizqu
+jumpifmovescriptequals 0x7 @AI_Explosion //Skeli
 jumpifmovescriptequals 0x8 @AI_AbsorbHalfDamageSleep
 jumpifmovescriptequals MOVESCR_MirrorMove @AI_MirroMove //Xizqu
 jumpifmovescriptequals 0xA @AI_UserAtk+1
@@ -357,9 +369,9 @@ jumpifmovescriptequals MOVESCR_Snatch @Return
 jumpifmovescriptequals 0xC4 @AI_LowKick
 jumpifmovescriptequals MOVESCR_SecertPower @Return
 jumpifmovescriptequals MOVESCR_LowKick @Return
-jumpifmovescriptequals MOVESCR_Teeterdance @Return
+jumpifmovescriptequals MOVESCR_Teeterdance @AI_TeeterDance //Skeli
 jumpifmovescriptequals MOVESCR_BlazeKick @Return
-jumpifmovescriptequals 0xC9 @AI_MudSport
+jumpifmovescriptequals 0xC9 @AI_MudSport //Edited Xizqu
 jumpifmovescriptequals MOVESCR_PoisonFang @Return
 jumpifmovescriptequals MOVESCR_WeatherBall @Return
 jumpifmovescriptequals MOVESCR_OverHeat_PsychoBoost @Return
@@ -368,7 +380,7 @@ jumpifmovescriptequals 0xCE @AI_CosmicPower
 jumpifmovescriptequals MOVESCR_SkyUpperCut @Return
 jumpifmovescriptequals 0xD0 @AI_BulkUp
 jumpifmovescriptequals MOVESCR_Poisontail @Return
-jumpifmovescriptequals 0xD2 @AI_WaterSport
+jumpifmovescriptequals 0xD2 @AI_WaterSport //Edited Xizqu
 jumpifmovescriptequals 0xD3 @AI_CalmMind
 jumpifmovescriptequals 0xD4 @AI_DragonDance
 jumpifmovescriptequals MOVESCR_Camouflage @Return
@@ -383,6 +395,26 @@ jumpifbyteequals ABILITY_INSOMNIA @AI_Minus10
 jumpifbyteequals ABILITY_VITALSPIRIT @AI_Minus10
 jumpifstatus1equals BANK_TARGET 0xFF @AI_Minus10
 returntobattle
+
+#org @AI_DrainHP
+GetAbility BANK_TARGET
+JumpIfByteEquals ABILITY_LIQUIDOOZE @AI_Minus6
+jumpifmoveidequals MOVE_STRENGTHSAP @AI_Minus_10_Atk_Min
+jump @AI_Standard_Damage
+
+#org @AI_ThunderMoves
+jumpifmoveidequals MOVE_BODYSLAM @AI_BodySlam
+jumpifmoveidequals MOVE_LICK @AI_Lick
+jumpifmoveidequals MOVE_DRAGONBREATH @AI_DragonBreath
+jumpifdamagebonusequals Immune @AI_Minus10
+ReturnToBattle
+
+#org @AI_BodySlam
+ReturnToBattle
+#org @AI_Lick
+ReturnToBattle
+#org @AI_DragonBreath
+ReturnToBattle
 
 
 #org @AI_Explosion
@@ -1184,7 +1216,7 @@ returntobattle
 //@@@@
 
 #org @AI_MudSport
-jumpifbytenotequal 0x0 @AI_Minus10
+JumpIfStatus3Equals BANK_TARGET 0x00010000 @AI_Minus10
 returntobattle
 
 //@@@@
@@ -1205,7 +1237,7 @@ jumpifstatbuffequals 0x1 0x2 0xC @AI_Minus8
 returntobattle
 
 #org @AI_WaterSport
-jumpifbytenotequal 0x0 @AI_Minus10
+JumpIfStatus3Equals BANK_TARGET 0x00020000 @AI_Minus10
 returntobattle
 
 //@@@@
